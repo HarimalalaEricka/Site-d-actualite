@@ -1,3 +1,6 @@
+CREATE DATABASE IF NOT EXISTS site_actus;
+USE site_actus;
+
 CREATE TABLE Role( -- admin , journaliste
    Id_Role INT AUTO_INCREMENT,
    role VARCHAR(50)  NOT NULL,
