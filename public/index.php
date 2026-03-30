@@ -6,6 +6,7 @@ use App\Controllers\Front\ArticleController;
 use App\Controllers\Front\ArchiveController;
 use App\Controllers\Front\CategoryController;
 use App\Controllers\Front\HomeController;
+use App\Controllers\Front\SearchController;
 use App\Core\Router;
 use App\Services\ViewCounterService;
 
@@ -16,6 +17,7 @@ require_once dirname(__DIR__) . '/app/Controllers/Front/HomeController.php';
 require_once dirname(__DIR__) . '/app/Controllers/Front/CategoryController.php';
 require_once dirname(__DIR__) . '/app/Controllers/Front/ArticleController.php';
 require_once dirname(__DIR__) . '/app/Controllers/Front/ArchiveController.php';
+require_once dirname(__DIR__) . '/app/Controllers/Front/SearchController.php';
 require_once dirname(__DIR__) . '/app/Services/SimpleCache.php';
 require_once dirname(__DIR__) . '/app/Services/ViewCounterService.php';
 
@@ -98,6 +100,25 @@ $router->get('#^/([a-z]{2})/([a-z0-9-]+)/article/(\d{4})/(\d{2})/(\d{2})/(\d+)-(
 	ViewCounterService::recordView((int) $id);
 
 	require __DIR__ . '/Views/Front/article.php';
+});
+
+$router->get('#^/([a-z]{2})/search/?$#', static function (string $lang): void {
+	$query = isset($_GET['q']) ? (string) $_GET['q'] : null;
+	$categoryId = (isset($_GET['categorie']) && $_GET['categorie'] !== '') ? (int) $_GET['categorie'] : null;
+	$tagSlug = isset($_GET['tag']) ? (string) $_GET['tag'] : null;
+	$dateFrom = isset($_GET['date_from']) ? (string) $_GET['date_from'] : null;
+	$dateTo = isset($_GET['date_to']) ? (string) $_GET['date_to'] : null;
+	$page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+
+	$searchController = new SearchController();
+	$searchData = $searchController->search($lang, $query, $categoryId, $tagSlug, $dateFrom, $dateTo, $page, 10);
+	$searchData['categories'] = $searchController->getCategories();
+	$searchData['popularTags'] = $searchController->getPopularTags($lang, 20);
+
+	$selectedCategoryId = $categoryId;
+	$selectedTagSlug = $tagSlug;
+
+	require __DIR__ . '/Views/Front/search.php';
 });
 
 $router->get('#^/([a-z]{2})/([a-z0-9-]+)/?$#', static function (string $lang, string $categorySlug): void {

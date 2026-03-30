@@ -24,6 +24,8 @@ function e(string $value): string
     <main>
         <nav>
             <a href="/admin.php">Acceder au BackOffice</a>
+            <span> | </span>
+            <a href="/<?php echo e($lang); ?>/search">Rechercher des articles</a>
         </nav>
 
         <h1>Actualites</h1>

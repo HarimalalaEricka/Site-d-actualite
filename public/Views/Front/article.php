@@ -67,7 +67,11 @@ function e(string $value): string
                     <h2>Tags</h2>
                     <ul>
                         <?php foreach ($article['tags'] as $tag): ?>
-                            <li>#<?php echo e((string) ($tag['nom'] ?? '')); ?></li>
+                            <li>
+                                <a href="/<?php echo e((string) ($article['lang'] ?? 'fr')); ?>/search?q=%23<?php echo urlencode((string) ($tag['nom'] ?? '')); ?>">
+                                    #<?php echo e((string) ($tag['nom'] ?? '')); ?>
+                                </a>
+                            </li>
                         <?php endforeach; ?>
                     </ul>
                 </section>

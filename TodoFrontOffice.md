@@ -612,7 +612,7 @@ Semaine 1:
 
 Semaine 2:
 - [ ] FO-004 Compteur vues robuste
-- [ ] FO-006 Recherche + filtres
+- [x] FO-006 Recherche + filtres
 - [ ] FO-007 i18n FR/EN
 - [ ] FO-008 SEO + Lighthouse + tuning final
 
