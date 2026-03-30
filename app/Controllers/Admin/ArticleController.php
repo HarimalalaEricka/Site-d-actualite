@@ -72,6 +72,12 @@ final class ArticleController
 
         $insertedId = (int) $connection->lastInsertId();
 
+        // Enregistre le changement de statut dans histo_status
+        if ($insertedId > 0 && $article->getIdStatusArticle() !== null) {
+            $hitoStatusController = new HistoStatusController();
+            $hitoStatusController->createHistoStatus($insertedId, $article->getIdStatusArticle());
+        }
+
         Database::closeConnection();
 
         return $insertedId > 0 ? $insertedId : null;
@@ -147,6 +153,10 @@ final class ArticleController
                 ':idUser' => $idUserAction,
             ]);
 
+            // Enregistre le changement de statut dans histo_status
+            $hitoStatusController = new HistoStatusController();
+            $hitoStatusController->createHistoStatus($idArticle, $retraitStatusId);
+
             $connection->commit();
 
             return true;
@@ -219,6 +229,59 @@ final class ArticleController
 
             $insertHitoPublication = $connection->prepare(
                 "INSERT INTO hito_publication (date_, action, Id_Article, Id_User) VALUES (NOW(), 'publication', :idArticle, :idUser)"
+            );
+            $insertHitoPublication->execute([
+                ':idArticle' => $idArticle,
+                ':idUser' => $idUserAction,
+            ]);
+
+            // Enregistre le changement de statut dans histo_status
+            $hitoStatusController = new HistoStatusController();
+            $hitoStatusController->createHistoStatus($idArticle, $publishedStatusId);
+
+            $connection->commit();
+
+            return true;
+        } catch (\Throwable $e) {
+            if ($connection->inTransaction()) {
+                $connection->rollBack();
+            }
+
+            throw $e;
+        } finally {
+            Database::closeConnection();
+        }
+    }
+
+    public function updateArticle(int $idArticle, Article $article, int $idUserAction): bool
+    {
+        $connection = Database::getConnection();
+
+        try {
+            $connection->beginTransaction();
+
+            $findArticle = $connection->prepare('SELECT Id_Article FROM Article WHERE Id_Article = :idArticle FOR UPDATE');
+            $findArticle->execute([':idArticle' => $idArticle]);
+            $articleExists = $findArticle->fetch();
+
+            if (!is_array($articleExists) || !isset($articleExists['Id_Article'])) {
+                $connection->rollBack();
+                return false;
+            }
+
+            $updateArticle = $connection->prepare(
+                'UPDATE Article SET titre = :titre, contenu = :contenu, Id_Categorie = :idCategorie, lang = :lang WHERE Id_Article = :idArticle'
+            );
+            $updateArticle->execute([
+                ':titre' => $article->getTitre(),
+                ':contenu' => $article->getContenu(),
+                ':idCategorie' => $article->getIdCategorie(),
+                ':lang' => $article->getLang(),
+                ':idArticle' => $idArticle,
+            ]);
+
+            $insertHitoPublication = $connection->prepare(
+                "INSERT INTO hito_publication (date_, action, Id_Article, Id_User) VALUES (NOW(), 'modification', :idArticle, :idUser)"
             );
             $insertHitoPublication->execute([
                 ':idArticle' => $idArticle,

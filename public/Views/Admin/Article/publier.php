@@ -3,13 +3,14 @@
 declare(strict_types=1);
 
 use App\Controllers\Admin\ArticleController;
+use App\Controllers\Admin\HistoStatusController;
 use App\Models\SessionLogin;
 
 require_once dirname(__DIR__, 4) . '/app/Core/Database.php';
 require_once dirname(__DIR__, 4) . '/app/Models/Article.php';
 require_once dirname(__DIR__, 4) . '/app/Models/SessionLogin.php';
 require_once dirname(__DIR__, 4) . '/app/Controllers/Admin/ArticleController.php';
-
+require_once dirname(__DIR__, 4) . '/app/Controllers/Admin/HistoStatusController.php';
 session_start();
 
 if (!isset($_SESSION['login']) || !($_SESSION['login'] instanceof SessionLogin) || $_SESSION['login']->getUserLoggedIn() !== true) {

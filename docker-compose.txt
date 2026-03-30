@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   php:
     build:
@@ -8,9 +6,9 @@ services:
     container_name: actualite_php
     working_dir: /var/www/html
     ports:
-      - "8000:80"  # Apache écoute sur 80 dans le container
+      - "8000:8000"
     volumes:
-      - ./:/var/www/html  # Monte ton projet dans le container
+      - ./:/var/www/html
     depends_on:
       mysql:
         condition: service_healthy
@@ -20,6 +18,7 @@ services:
       DB_NAME: site_actus
       DB_USER: root
       DB_PASS: root
+    command: php -S 0.0.0.0:8000 -t public
 
   mysql:
     image: mysql:8.0
