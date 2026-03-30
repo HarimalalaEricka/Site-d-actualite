@@ -46,7 +46,7 @@ Implémenter un moteur de recherche efficace permettant aux visiteurs de:
   - Tags populaires: Suggestion pour filtrage
 
 ### Migrations DB
-- **script/28-03-2026/V5__add_fulltext_indexes_fo6_search.sql** (NOUVEAU)
+- **script/28-03-2026/V6__add_all_indexes.sql** (NOUVEAU)
   - Index FULLTEXT article(titre, contenu)
   - Index réguliers support (tag, catégorie, date)
 

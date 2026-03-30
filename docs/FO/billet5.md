@@ -45,7 +45,7 @@ Implémenter une page archives permettant aux visiteurs de naviguer l'historique
   - Contrôles pagination: Précédent/suivant
 
 ### Migrations DB
-- **script/28-03-2026/V4__add_indexes_fo5_archives.sql** (NOUVEAU)
+- **script/28-03-2026/V6__add_all_indexes.sql** (NOUVEAU)
   - 3 indexes créés de façon idempotente
 
 ### Documentation

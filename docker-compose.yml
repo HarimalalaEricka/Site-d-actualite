@@ -33,9 +33,7 @@ services:
       - mysql_data:/var/lib/mysql
       - ./script/28-03-2026/script_v1.sql:/docker-entrypoint-initdb.d/01-schema.sql
       - ./script/28-03-2026/test_data_1.sql:/docker-entrypoint-initdb.d/02-data.sql
-      - ./script/28-03-2026/V3__add_indexes_fo2_fo3.sql:/docker-entrypoint-initdb.d/04-add-indexes-fo2-fo3.sql
-      - ./script/28-03-2026/V4__add_indexes_fo5_archives.sql:/docker-entrypoint-initdb.d/05-add-indexes-fo5-archives.sql
-      - ./script/28-03-2026/V5__add_fulltext_indexes_fo6_search.sql:/docker-entrypoint-initdb.d/06-add-fulltext-indexes-fo6-search.sql
+      - ./script/28-03-2026/V6__add_all_indexes.sql:/docker-entrypoint-initdb.d/04-add-all-indexes.sql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s

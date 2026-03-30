@@ -20,15 +20,108 @@ function switchLangUrl(string $currentLang, string $targetLang): string
 
     return $query !== '' ? $targetPath . '?' . $query : $targetPath;
 }
+
+function buildVideoEmbedUrl(string $url): ?string
+{
+    $trimmed = trim($url);
+
+    if (preg_match('#^https?://(?:www\.)?youtube\.com/watch\?v=([a-zA-Z0-9_-]{6,})#', $trimmed, $matches) === 1) {
+        return 'https://www.youtube.com/embed/' . $matches[1];
+    }
+
+    if (preg_match('#^https?://youtu\.be/([a-zA-Z0-9_-]{6,})#', $trimmed, $matches) === 1) {
+        return 'https://www.youtube.com/embed/' . $matches[1];
+    }
+
+    if (preg_match('#^https?://(?:www\.)?youtube\.com/embed/([a-zA-Z0-9_-]{6,})#', $trimmed, $matches) === 1) {
+        return 'https://www.youtube.com/embed/' . $matches[1];
+    }
+
+    if (preg_match('#^https?://(?:www\.)?vimeo\.com/(\d+)#', $trimmed, $matches) === 1) {
+        return 'https://player.vimeo.com/video/' . $matches[1];
+    }
+
+    if (preg_match('#^https?://player\.vimeo\.com/video/(\d+)#', $trimmed, $matches) === 1) {
+        return 'https://player.vimeo.com/video/' . $matches[1];
+    }
+
+    return null;
+}
+
+function buildAutoplayEmbedUrl(string $url): string
+{
+    $separator = str_contains($url, '?') ? '&' : '?';
+
+    if (strpos($url, 'youtube.com/embed/') !== false) {
+        return $url . $separator . 'autoplay=1&mute=1&playsinline=1&rel=0';
+    }
+
+    if (strpos($url, 'player.vimeo.com/video/') !== false) {
+        return $url . $separator . 'autoplay=1&muted=1&playsinline=1';
+    }
+
+    return $url;
+}
+
+function videoMimeTypeFromUrl(string $url): string
+{
+    $path = (string) parse_url($url, PHP_URL_PATH);
+    $extension = strtolower((string) pathinfo($path, PATHINFO_EXTENSION));
+
+    return match ($extension) {
+        'webm' => 'video/webm',
+        'ogg', 'ogv' => 'video/ogg',
+        'm4v' => 'video/mp4',
+        'mov' => 'video/quicktime',
+        default => 'video/mp4',
+    };
+}
+
+$articleTitle = (string) $article['titre'];
+$articleDescription = trim(substr(strip_tags((string) $article['contenu']), 0, 160));
+if ($articleDescription === '') {
+    $articleDescription = 'Article d actualite et analyse.';
+}
+
+$articleAuthor = trim((string) $article['prenom'] . ' ' . (string) $article['nom']);
+if ($articleAuthor === '') {
+    $articleAuthor = 'Redaction';
+}
+
+$articleJsonLd = [
+    '@context' => 'https://schema.org',
+    '@type' => 'NewsArticle',
+    'headline' => $articleTitle,
+    'description' => $articleDescription,
+    'datePublished' => (string) ($article['date_publication'] ?? ''),
+    'inLanguage' => (string) ($article['lang'] ?? 'fr'),
+    'author' => [
+        '@type' => 'Person',
+        'name' => $articleAuthor,
+    ],
+    'mainEntityOfPage' => $canonicalPath,
+];
+if (($article['primary_media_kind'] ?? 'image') === 'image' && isset($article['image_url']) && (string) $article['image_url'] !== '') {
+    $articleJsonLd['image'] = [(string) $article['image_url']];
+}
 ?>
 <!doctype html>
 <html lang="<?php echo e((string) $article['lang']); ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="<?php echo e(substr(strip_tags((string) $article['contenu']), 0, 160)); ?>">
+    <meta name="description" content="<?php echo e($articleDescription); ?>">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="<?php echo e($articleTitle); ?>">
+    <meta property="og:description" content="<?php echo e($articleDescription); ?>">
+    <meta property="og:url" content="<?php echo e($canonicalPath); ?>">
+    <?php if (($article['primary_media_kind'] ?? 'image') === 'image' && isset($article['image_url']) && (string) $article['image_url'] !== ''): ?>
+        <meta property="og:image" content="<?php echo e((string) $article['image_url']); ?>">
+    <?php endif; ?>
     <link rel="canonical" href="<?php echo e($canonicalPath); ?>">
-    <title><?php echo e((string) $article['titre']); ?> | Site d'actualite</title>
+    <title><?php echo e($articleTitle); ?> | Site d'actualite</title>
+    <script type="application/ld+json"><?php echo json_encode($articleJsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?></script>
 </head>
 <body>
     <main>
@@ -51,7 +144,7 @@ function switchLangUrl(string $currentLang, string $targetLang): string
             <h1><?php echo e((string) $article['titre']); ?></h1>
             <p>
                 Par <?php echo e(trim((string) $article['prenom'] . ' ' . (string) $article['nom'])); ?>
-                - <?php echo e((string) $article['date_publication']); ?>
+                - <time datetime="<?php echo e((string) $article['date_publication']); ?>"><?php echo e((string) $article['date_publication']); ?></time>
             </p>
 
             <?php if (is_array($article['collaborations'] ?? null) && $article['collaborations'] !== []): ?>
@@ -64,8 +157,28 @@ function switchLangUrl(string $currentLang, string $targetLang): string
                 </p>
             <?php endif; ?>
 
-            <?php if (isset($article['image_url']) && (string) $article['image_url'] !== ''): ?>
-                <img src="<?php echo e((string) $article['image_url']); ?>" alt="Image principale de l'article">
+            <?php if (isset($article['primary_media_url']) && (string) $article['primary_media_url'] !== ''): ?>
+                <?php if (($article['primary_media_kind'] ?? 'image') === 'video'): ?>
+                    <?php $primaryVideoUrl = (string) $article['primary_media_url']; ?>
+                    <?php $primaryEmbedUrl = buildVideoEmbedUrl($primaryVideoUrl); ?>
+                    <?php if ($primaryEmbedUrl !== null): ?>
+                        <?php $primaryEmbedAutoplayUrl = buildAutoplayEmbedUrl($primaryEmbedUrl); ?>
+                        <iframe
+                            src="<?php echo e($primaryEmbedAutoplayUrl); ?>"
+                            title="Video principale"
+                            loading="lazy"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen
+                        ></iframe>
+                    <?php else: ?>
+                        <video controls autoplay muted preload="metadata" playsinline>
+                            <source src="<?php echo e($primaryVideoUrl); ?>" type="<?php echo e(videoMimeTypeFromUrl($primaryVideoUrl)); ?>">
+                            Votre navigateur ne prend pas en charge la lecture video.
+                        </video>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <img src="<?php echo e((string) $article['primary_media_url']); ?>" alt="Image principale de l'article" decoding="async" fetchpriority="high">
+                <?php endif; ?>
             <?php endif; ?>
 
             <section>
@@ -78,7 +191,28 @@ function switchLangUrl(string $currentLang, string $targetLang): string
                     <ul>
                         <?php foreach ($article['media_gallery'] as $media): ?>
                             <li>
-                                <img src="<?php echo e((string) ($media['url'] ?? '')); ?>" alt="<?php echo e((string) (($media['description'] ?? '') !== '' ? $media['description'] : 'Media secondaire')); ?>">
+                                <?php $mediaUrl = (string) ($media['url'] ?? ''); ?>
+                                <?php $mediaDescription = (string) (($media['description'] ?? '') !== '' ? $media['description'] : 'Media secondaire'); ?>
+                                <?php if (($media['media_kind'] ?? 'image') === 'video'): ?>
+                                    <?php $embedUrl = buildVideoEmbedUrl($mediaUrl); ?>
+                                    <?php if ($embedUrl !== null): ?>
+                                        <?php $embedAutoplayUrl = buildAutoplayEmbedUrl($embedUrl); ?>
+                                        <iframe
+                                            src="<?php echo e($embedAutoplayUrl); ?>"
+                                            title="<?php echo e($mediaDescription); ?>"
+                                            loading="lazy"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowfullscreen
+                                        ></iframe>
+                                    <?php else: ?>
+                                        <video controls autoplay muted preload="metadata" playsinline>
+                                            <source src="<?php echo e($mediaUrl); ?>" type="<?php echo e(videoMimeTypeFromUrl($mediaUrl)); ?>">
+                                            Votre navigateur ne prend pas en charge la lecture video.
+                                        </video>
+                                    <?php endif; ?>
+                                <?php else: ?>
+                                    <img src="<?php echo e($mediaUrl); ?>" alt="<?php echo e($mediaDescription); ?>" loading="lazy" decoding="async">
+                                <?php endif; ?>
                             </li>
                         <?php endforeach; ?>
                     </ul>

@@ -7,6 +7,15 @@ $latest = is_array($homeData['latest'] ?? null) ? $homeData['latest'] : [];
 $popular = is_array($homeData['popular'] ?? null) ? $homeData['popular'] : [];
 $categories = is_array($homeData['categories'] ?? null) ? $homeData['categories'] : [];
 
+$pageTitle = $lang === 'en' ? 'Home' : 'Accueil';
+$metaDescription = $lang === 'en'
+    ? 'Latest news and analysis: featured stories, categories, and most-read articles.'
+    : 'Actualites recentes, articles a la une, categories et contenus les plus lus.';
+$canonicalPath = (string) parse_url((string) ($_SERVER['REQUEST_URI'] ?? ('/' . $lang)), PHP_URL_PATH);
+if ($canonicalPath === '') {
+    $canonicalPath = '/' . $lang;
+}
+
 function e(string $value): string
 {
     return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
@@ -31,12 +40,17 @@ function switchLangUrl(string $currentLang, string $targetLang): string
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Actualites recentes sur les conflits et la geopolitique.">
-    <title>Accueil | Site d'actualite</title>
+    <meta name="description" content="<?php echo e($metaDescription); ?>">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="<?php echo e($pageTitle); ?> | Site d'actualite">
+    <meta property="og:description" content="<?php echo e($metaDescription); ?>">
+    <link rel="canonical" href="<?php echo e($canonicalPath); ?>">
+    <title><?php echo e($pageTitle); ?> | Site d'actualite</title>
 </head>
 <body>
     <main>
-        <nav>
+        <nav aria-label="Navigation principale">
             <a href="/admin.php">Acceder au BackOffice</a>
             <span> | </span>
             <a href="/<?php echo e($lang); ?>/search">Rechercher des articles</a>

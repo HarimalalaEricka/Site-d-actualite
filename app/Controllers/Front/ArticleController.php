@@ -16,15 +16,18 @@ final class ArticleController
     {
                 $connection = Database::getConnection();
 
-        $sql = "SELECT a.Id_Article, a.titre, a.slug, a.date_publication, a.contenu, a.nbr_vues, a.lang,
+                $sql = "SELECT a.Id_Article, a.titre, a.slug, a.date_publication, a.contenu, a.nbr_vues, a.lang,
                        a.Id_Categorie, c.categorie,
                                              u.Id_User AS principal_user_id, u.prenom, u.nom,
-                       m.url AS image_url
+                                             m.url AS primary_media_url,
+                                             m.url AS image_url,
+                                             tm.type AS primary_media_type
                 FROM Article a
                 INNER JOIN status_article s ON s.Id_status_article = a.Id_status_article
                 INNER JOIN Categorie c ON c.Id_Categorie = a.Id_Categorie
                 INNER JOIN User_ u ON u.Id_User = a.Id_User_principal
                 LEFT JOIN Media m ON m.Id_Article = a.Id_Article AND m.priorite = 1
+                                LEFT JOIN type_media tm ON tm.Id_type_media = m.Id_type_media
                 WHERE a.Id_Article = :idArticle
                   AND a.lang = :lang
                   AND s.status = 'publie'
@@ -46,6 +49,10 @@ final class ArticleController
         $row['contenu'] = $this->sanitizeContentHtml((string) ($row['contenu'] ?? ''));
         $row['slug'] = (string) ($row['slug'] ?? Article::slugify((string) ($row['titre'] ?? '')));
         $row['category_slug'] = Article::slugify((string) ($row['categorie'] ?? ''));
+        $row['primary_media_kind'] = $this->resolveMediaKind(
+            isset($row['primary_media_type']) ? (string) $row['primary_media_type'] : null,
+            (string) ($row['primary_media_url'] ?? '')
+        );
         $row['tags'] = $this->getTagsByArticle($connection, (int) $row['Id_Article']);
         $row['collaborations'] = $this->getCollaborationsByArticle(
             $connection,
@@ -106,12 +113,13 @@ final class ArticleController
     }
 
     /**
-     * @return array<int, array{Id_Media:int, url:string, description:string|null}>
+         * @return array<int, array{Id_Media:int, url:string, description:string|null, media_type:string|null, media_kind:string}>
      */
     private function getSecondaryMediaByArticle(\PDO $connection, int $idArticle): array
     {
-        $sql = "SELECT m.Id_Media, m.url, m.description
+                $sql = "SELECT m.Id_Media, m.url, m.description, tm.type AS media_type
                 FROM Media m
+                                LEFT JOIN type_media tm ON tm.Id_type_media = m.Id_type_media
                 WHERE m.Id_Article = :idArticle
                   AND (m.priorite = 0 OR m.priorite IS NULL)
                 ORDER BY m.Id_Media ASC";
@@ -120,7 +128,47 @@ final class ArticleController
         $statement->execute([':idArticle' => $idArticle]);
         $rows = $statement->fetchAll();
 
-        return is_array($rows) ? $rows : [];
+        if (!is_array($rows)) {
+            return [];
+        }
+
+        foreach ($rows as &$row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $row['media_kind'] = $this->resolveMediaKind(
+                isset($row['media_type']) ? (string) $row['media_type'] : null,
+                (string) ($row['url'] ?? '')
+            );
+        }
+        unset($row);
+
+        return $rows;
+    }
+
+    private function resolveMediaKind(?string $mediaType, string $url): string
+    {
+        $type = strtolower(trim((string) $mediaType));
+        if ($type === 'video') {
+            return 'video';
+        }
+        if ($type === 'image') {
+            return 'image';
+        }
+
+        $path = (string) parse_url($url, PHP_URL_PATH);
+        $extension = strtolower((string) pathinfo($path, PATHINFO_EXTENSION));
+        $videoExtensions = ['mp4', 'webm', 'ogg', 'ogv', 'm4v', 'mov'];
+
+        if (in_array($extension, $videoExtensions, true)) {
+            return 'video';
+        }
+
+        if (strpos($url, 'youtube.com') !== false || strpos($url, 'youtu.be') !== false || strpos($url, 'vimeo.com') !== false) {
+            return 'video';
+        }
+
+        return 'image';
     }
 
     /**
@@ -169,7 +217,7 @@ final class ArticleController
 
         return strip_tags(
             $withoutStyles,
-            '<p><br><strong><em><ul><ol><li><h1><h2><h3><h4><blockquote><a><img>'
+            '<p><br><strong><em><ul><ol><li><h1><h2><h3><h4><blockquote><a><img><video><source>'
         );
     }
 

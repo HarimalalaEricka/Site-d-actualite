@@ -512,18 +512,18 @@ Scope technique:
 - Meta, canonical, balisage, compression assets.
 
 Taches implementation:
-- [ ] 1 h1 par page
-- [ ] meta description + title unique par page
-- [ ] canonical URL sur article/categorie
-- [ ] alt obligatoire sur images
-- [ ] cache-control pour css/js/images
+- [x] 1 h1 par page
+- [x] meta description + title unique par page
+- [x] canonical URL sur article/categorie
+- [x] alt obligatoire sur images
+- [x] cache-control pour css/js/images
 
 SQL/Index:
 - [ ] Aucun index specifique
 
 Critere d'acceptation:
 - [ ] Scores Lighthouse conformes
-- [ ] Aucun blocage SEO critique detecte
+- [x] Aucun blocage SEO critique detecte
 
 Definition of Done:
 - [ ] Rapport Lighthouse capture et archive

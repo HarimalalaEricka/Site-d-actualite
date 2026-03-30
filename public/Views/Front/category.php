@@ -20,14 +20,29 @@ function switchLangUrl(string $currentLang, string $targetLang): string
 
     return $query !== '' ? $targetPath . '?' . $query : $targetPath;
 }
+
+$currentPage = (int) ($categoryData['page'] ?? 1);
+$totalPages = (int) ($categoryData['totalPages'] ?? 1);
+$basePath = '/' . $lang . '/' . (string) ($category['slug'] ?? '');
+$canonicalPath = $currentPage > 1 ? $basePath . '?page=' . $currentPage : $basePath;
+$pageTitle = (string) $category['categorie'] . ($currentPage > 1 ? ' - Page ' . $currentPage : '');
+$metaDescription = 'Articles de la categorie ' . (string) $category['categorie'] . '. Total: ' . (string) ((int) ($categoryData['total'] ?? 0));
 ?>
 <!doctype html>
 <html lang="<?php echo e($lang); ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Liste des articles de la categorie.">
-    <title><?php echo e((string) $category['categorie']); ?> | Site d'actualite</title>
+    <meta name="description" content="<?php echo e($metaDescription); ?>">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="<?php echo e($canonicalPath); ?>">
+    <?php if ($currentPage > 1): ?>
+        <link rel="prev" href="<?php echo e($currentPage === 2 ? $basePath : ($basePath . '?page=' . ($currentPage - 1))); ?>">
+    <?php endif; ?>
+    <?php if ($currentPage < $totalPages): ?>
+        <link rel="next" href="<?php echo e($basePath . '?page=' . ($currentPage + 1)); ?>">
+    <?php endif; ?>
+    <title><?php echo e($pageTitle); ?> | Site d'actualite</title>
 </head>
 <body>
     <main>

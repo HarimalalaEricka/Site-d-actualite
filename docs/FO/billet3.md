@@ -20,7 +20,7 @@ Ce qui doit etre visible sur la page article:
 
 - app/Controllers/Front/ArticleController.php
 - public/Views/Front/article.php
-- script/28-03-2026/V3__add_indexes_fo2_fo3.sql
+- script/28-03-2026/V6__add_all_indexes.sql
 
 ---
 

@@ -23,6 +23,52 @@ function switchLangUrl(string $currentLang, string $targetLang): string
 
     return $query !== '' ? $targetPath . '?' . $query : $targetPath;
 }
+
+$page = (int) ($searchData['page'] ?? 1);
+$totalPages = (int) ($searchData['totalPages'] ?? 1);
+$hasFilters = ($query !== null && trim($query) !== '')
+    || $selectedCategoryId !== null
+    || ($selectedTagSlug !== null && $selectedTagSlug !== '')
+    || ($dateFrom !== null && $dateFrom !== '')
+    || ($dateTo !== null && $dateTo !== '');
+
+$titleParts = ['Recherche'];
+if ($query !== null && trim($query) !== '') {
+    $titleParts[] = '"' . trim($query) . '"';
+}
+if ($page > 1) {
+    $titleParts[] = 'Page ' . $page;
+}
+$pageTitle = implode(' - ', $titleParts);
+
+$metaDescription = $hasFilters
+    ? 'Resultats de recherche filtres par mots-cles, categorie, tag et date.'
+    : 'Recherchez parmi nos actualites par titre, contenu, categorie, tag ou date.';
+
+$queryParams = [];
+if ($query !== null && trim($query) !== '') {
+    $queryParams['q'] = trim($query);
+}
+if ($selectedCategoryId !== null) {
+    $queryParams['categorie'] = (string) $selectedCategoryId;
+}
+if ($selectedTagSlug !== null && $selectedTagSlug !== '') {
+    $queryParams['tag'] = $selectedTagSlug;
+}
+if ($dateFrom !== null && $dateFrom !== '') {
+    $queryParams['date_from'] = $dateFrom;
+}
+if ($dateTo !== null && $dateTo !== '') {
+    $queryParams['date_to'] = $dateTo;
+}
+if ($page > 1) {
+    $queryParams['page'] = (string) $page;
+}
+
+$canonicalPath = '/' . $lang . '/search';
+if ($queryParams !== []) {
+    $canonicalPath .= '?' . http_build_query($queryParams);
+}
 ?>
 
 <!DOCTYPE html>
@@ -30,9 +76,18 @@ function switchLangUrl(string $currentLang, string $targetLang): string
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recherche - Actualités</title>
-    <meta name="description" content="Recherchez parmi nos actualités par titre, contenu, catégorie, tag ou date">
-    <link rel="canonical" href="/<?= htmlspecialchars($lang) ?>/search">
+    <title><?= htmlspecialchars($pageTitle) ?> | Site d'actualite</title>
+    <meta name="description" content="<?= htmlspecialchars($metaDescription) ?>">
+    <meta name="robots" content="<?= $hasFilters ? 'noindex,follow' : 'index,follow' ?>">
+    <link rel="canonical" href="<?= htmlspecialchars($canonicalPath) ?>">
+    <?php if ($totalPages > 1 && $page > 1): ?>
+        <?php $prevParams = $queryParams; unset($prevParams['page']); if ($page > 2) { $prevParams['page'] = (string) ($page - 1); } ?>
+        <link rel="prev" href="/<?= htmlspecialchars($lang) ?>/search<?= $prevParams !== [] ? '?' . htmlspecialchars(http_build_query($prevParams)) : '' ?>">
+    <?php endif; ?>
+    <?php if ($totalPages > 1 && $page < $totalPages): ?>
+        <?php $nextParams = $queryParams; $nextParams['page'] = (string) ($page + 1); ?>
+        <link rel="next" href="/<?= htmlspecialchars($lang) ?>/search?<?= htmlspecialchars(http_build_query($nextParams)) ?>">
+    <?php endif; ?>
 </head>
 <body>
     <header>

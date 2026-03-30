@@ -40,13 +40,38 @@ $queryPrefix = '';
 if (isset($selectedCategorySlug) && is_string($selectedCategorySlug) && $selectedCategorySlug !== '') {
     $queryPrefix = 'categorie=' . urlencode($selectedCategorySlug) . '&';
 }
+
+$canonicalPath = $basePath;
+if ($queryPrefix !== '') {
+    $canonicalPath .= '?' . rtrim($queryPrefix, '&');
+}
+if ($page > 1) {
+    $canonicalPath .= ($queryPrefix !== '' ? '&' : '?') . 'page=' . $page;
+}
+
+$metaDescription = 'Consultez les archives des articles publies par mois et categorie.';
+if ($year !== null && $month !== null) {
+    $metaDescription = sprintf('Archives %04d/%02d des actualites publiees.', $year, $month);
+} elseif ($year !== null) {
+    $metaDescription = sprintf('Archives %04d des actualites publiees.', $year);
+}
 ?>
 <!doctype html>
 <html lang="<?php echo e($lang); ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Archives des articles publies.">
+    <meta name="description" content="<?php echo e($metaDescription); ?>">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="<?php echo e($canonicalPath); ?>">
+    <?php if ($totalPages > 1 && $page > 1): ?>
+        <?php $prevPagePath = $basePath . '?' . $queryPrefix . 'page=' . ($page - 1); ?>
+        <link rel="prev" href="<?php echo e($prevPagePath); ?>">
+    <?php endif; ?>
+    <?php if ($totalPages > 1 && $page < $totalPages): ?>
+        <?php $nextPagePath = $basePath . '?' . $queryPrefix . 'page=' . ($page + 1); ?>
+        <link rel="next" href="<?php echo e($nextPagePath); ?>">
+    <?php endif; ?>
     <title><?php echo e($title); ?> | Site d'actualite</title>
 </head>
 <body>
