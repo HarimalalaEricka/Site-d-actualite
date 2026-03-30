@@ -7,6 +7,20 @@ function e(string $value): string
     return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
 }
 
+function switchLangUrl(string $currentLang, string $targetLang): string
+{
+    $currentUri = (string) ($_SERVER['REQUEST_URI'] ?? ('/' . $currentLang));
+    $path = (string) parse_url($currentUri, PHP_URL_PATH);
+    $query = (string) parse_url($currentUri, PHP_URL_QUERY);
+
+    $targetPath = preg_replace('#^/' . preg_quote($currentLang, '#') . '(?=/|$)#', '/' . $targetLang, $path);
+    if (!is_string($targetPath) || $targetPath === '') {
+        $targetPath = '/' . $targetLang;
+    }
+
+    return $query !== '' ? $targetPath . '?' . $query : $targetPath;
+}
+
 $title = 'Archives';
 if ($year !== null && $month !== null) {
     $title = sprintf('Archives %04d/%02d', $year, $month);
@@ -41,6 +55,15 @@ if (isset($selectedCategorySlug) && is_string($selectedCategorySlug) && $selecte
 
         <nav>
             <a href="/<?php echo e($lang); ?>">Accueil</a>
+            <span> | </span>
+            <a href="/<?php echo e($lang); ?>/search">Recherche</a>
+            <span> | </span>
+            <span aria-label="Language switch">&#127760;</span>
+            <?php if ($lang === 'fr'): ?>
+                <strong>FR</strong> <span>/</span> <a href="<?php echo e(switchLangUrl($lang, 'en')); ?>">EN</a>
+            <?php else: ?>
+                <a href="<?php echo e(switchLangUrl($lang, 'fr')); ?>">FR</a> <span>/</span> <strong>EN</strong>
+            <?php endif; ?>
         </nav>
 
         <?php if (is_array($categories) && $categories !== []): ?>

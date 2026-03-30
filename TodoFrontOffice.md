@@ -487,19 +487,19 @@ Scope technique:
 - Filtrage global par lang.
 
 Taches implementation:
-- [ ] Ajouter middleware/lang resolver
-- [ ] Propager lang dans toutes les requetes Front
-- [ ] Forcer URLs canonique par langue
+- [x] Ajouter middleware/lang resolver
+- [x] Propager lang dans toutes les requetes Front
+- [x] Forcer URLs canonique par langue
 
 SQL/Index:
-- [ ] Article: INDEX(lang, Id_status_article, date_publication)
-- [ ] UNIQUE(lang, slug)
+- [x] Article: INDEX(lang, Id_status_article, date_publication)
+- [x] UNIQUE(lang, slug)
 
 Critere d'acceptation:
-- [ ] Aucun article EN dans parcours FR (et inversement)
+- [x] Aucun article EN dans parcours FR (et inversement)
 
 Definition of Done:
-- [ ] Switch langue stable sur Home, listing, detail
+- [x] Switch langue stable sur Home, listing, detail
 
 ---
 
@@ -613,7 +613,7 @@ Semaine 1:
 Semaine 2:
 - [ ] FO-004 Compteur vues robuste
 - [x] FO-006 Recherche + filtres
-- [ ] FO-007 i18n FR/EN
+- [x] FO-007 i18n FR/EN
 - [ ] FO-008 SEO + Lighthouse + tuning final
 
 Gate avant mise en prod:

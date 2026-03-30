@@ -9,6 +9,20 @@ declare(strict_types=1);
 /** @var string|null $selectedTagSlug */
 /** @var string|null $dateFrom */
 /** @var string|null $dateTo */
+
+function switchLangUrl(string $currentLang, string $targetLang): string
+{
+    $currentUri = (string) ($_SERVER['REQUEST_URI'] ?? ('/' . $currentLang . '/search'));
+    $path = (string) parse_url($currentUri, PHP_URL_PATH);
+    $query = (string) parse_url($currentUri, PHP_URL_QUERY);
+
+    $targetPath = preg_replace('#^/' . preg_quote($currentLang, '#') . '(?=/|$)#', '/' . $targetLang, $path);
+    if (!is_string($targetPath) || $targetPath === '') {
+        $targetPath = '/' . $targetLang . '/search';
+    }
+
+    return $query !== '' ? $targetPath . '?' . $query : $targetPath;
+}
 ?>
 
 <!DOCTYPE html>
@@ -23,6 +37,18 @@ declare(strict_types=1);
 <body>
     <header>
         <h1>Recherche d'actualités</h1>
+        <nav>
+            <a href="/<?= htmlspecialchars($lang) ?>">Accueil</a>
+            <span> | </span>
+            <a href="/<?= htmlspecialchars($lang) ?>/archives">Archives</a>
+            <span> | </span>
+            <span aria-label="Language switch">&#127760;</span>
+            <?php if ($lang === 'fr'): ?>
+                <strong>FR</strong> <span>/</span> <a href="<?= htmlspecialchars(switchLangUrl($lang, 'en')) ?>">EN</a>
+            <?php else: ?>
+                <a href="<?= htmlspecialchars(switchLangUrl($lang, 'fr')) ?>">FR</a> <span>/</span> <strong>EN</strong>
+            <?php endif; ?>
+        </nav>
     </header>
 
     <main>
@@ -170,203 +196,5 @@ declare(strict_types=1);
         </footer>
     </main>
 
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            margin: 0;
-            padding: 1rem;
-            background-color: #f9f9f9;
-            color: #333;
-        }
-
-        header {
-            margin-bottom: 2rem;
-        }
-
-        h1 {
-            font-size: 2rem;
-            margin: 0 0 1rem;
-        }
-
-        h2 {
-            font-size: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        fieldset {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            background-color: #fff;
-        }
-
-        legend {
-            font-weight: bold;
-            padding: 0 0.5rem;
-        }
-
-        .field {
-            margin-bottom: 1rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        input[type="text"],
-        input[type="date"],
-        select {
-            width: 100%;
-            max-width: 300px;
-            padding: 0.5rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        button {
-            padding: 0.75rem 1.5rem;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        a {
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .empty-state {
-            padding: 2rem;
-            background-color: #fff;
-            border-radius: 4px;
-            text-align: center;
-            color: #666;
-        }
-
-        .help-text {
-            padding: 2rem;
-            background-color: #e3f2fd;
-            border-left: 4px solid #007bff;
-            border-radius: 4px;
-        }
-
-        .articles-list {
-            display: grid;
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .article-card {
-            padding: 1.5rem;
-            background-color: #fff;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .article-card h3 {
-            margin: 0 0 0.5rem;
-            font-size: 1.25rem;
-        }
-
-        .article-card a {
-            text-decoration: none;
-        }
-
-        .article-card a:hover {
-            text-decoration: underline;
-        }
-
-        .article-meta {
-            font-size: 0.9rem;
-            color: #666;
-            margin: 0 0 1rem;
-        }
-
-        .article-resume {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 2rem;
-            align-items: center;
-        }
-
-        .pagination a {
-            padding: 0.5rem 1rem;
-            background-color: #f0f0f0;
-            border-radius: 4px;
-        }
-
-        .pagination a:hover {
-            background-color: #e0e0e0;
-        }
-
-        .page-info {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        small {
-            display: block;
-            margin-top: 0.25rem;
-            color: #666;
-            font-size: 0.85rem;
-        }
-
-        code {
-            background-color: #f5f5f5;
-            padding: 0.1rem 0.3rem;
-            border-radius: 3px;
-            font-family: monospace;
-        }
-
-        footer {
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid #ddd;
-            text-align: center;
-            color: #666;
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.5rem;
-            }
-
-            input[type="text"],
-            input[type="date"],
-            select {
-                max-width: 100%;
-            }
-
-            .articles-list {
-                gap: 1rem;
-            }
-
-            .article-card {
-                padding: 1rem;
-            }
-        }
-    </style>
 </body>
 </html>

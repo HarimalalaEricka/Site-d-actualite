@@ -6,6 +6,20 @@ function e(string $value): string
 {
     return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
 }
+
+function switchLangUrl(string $currentLang, string $targetLang): string
+{
+    $currentUri = (string) ($_SERVER['REQUEST_URI'] ?? ('/' . $currentLang));
+    $path = (string) parse_url($currentUri, PHP_URL_PATH);
+    $query = (string) parse_url($currentUri, PHP_URL_QUERY);
+
+    $targetPath = preg_replace('#^/' . preg_quote($currentLang, '#') . '(?=/|$)#', '/' . $targetLang, $path);
+    if (!is_string($targetPath) || $targetPath === '') {
+        $targetPath = '/' . $targetLang;
+    }
+
+    return $query !== '' ? $targetPath . '?' . $query : $targetPath;
+}
 ?>
 <!doctype html>
 <html lang="<?php echo e((string) $article['lang']); ?>">
@@ -22,6 +36,15 @@ function e(string $value): string
             <a href="/<?php echo e((string) $article['lang']); ?>">Accueil</a>
             <span>/</span>
             <a href="/<?php echo e((string) $article['lang']); ?>/<?php echo e((string) $article['category_slug']); ?>"><?php echo e((string) $article['categorie']); ?></a>
+            <span> | </span>
+            <a href="/<?php echo e((string) $article['lang']); ?>/search">Recherche</a>
+            <span> | </span>
+            <span aria-label="Language switch">&#127760;</span>
+            <?php if (($article['lang'] ?? 'fr') === 'fr'): ?>
+                <strong>FR</strong> <span>/</span> <a href="<?php echo e(switchLangUrl((string) ($article['lang'] ?? 'fr'), 'en')); ?>">EN</a>
+            <?php else: ?>
+                <a href="<?php echo e(switchLangUrl((string) ($article['lang'] ?? 'en'), 'fr')); ?>">FR</a> <span>/</span> <strong>EN</strong>
+            <?php endif; ?>
         </nav>
 
         <article>

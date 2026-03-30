@@ -6,6 +6,7 @@ namespace App\Controllers\Front;
 
 use App\Core\Database;
 use App\Models\Article;
+use App\Services\PaginationService;
 
 class SearchController
 {
@@ -39,9 +40,6 @@ class SearchController
         int $page = 1,
         int $perPage = 10
     ): array {
-        $page = max(1, $page);
-        $perPage = max(1, $perPage);
-        $offset = ($page - 1) * $perPage;
         $normalizedQuery = trim((string) $query);
         $queryTagSlugs = $this->extractHashtagSlugs($normalizedQuery);
         $textQuery = $this->removeHashtagsFromQuery($normalizedQuery);
@@ -160,6 +158,10 @@ class SearchController
         $countStmt->execute($params);
         $total = (int) $countStmt->fetchColumn();
 
+        // Calculer pagination
+        $pagination = PaginationService::calculate($total, $page, $perPage);
+        $offset = $pagination['offset'];
+
         $relevanceSelect = '0 AS relevance';
         if ($textQuery !== '') {
             $relevanceSelect = 'MATCH(a.titre, a.contenu) AGAINST(:qscore IN BOOLEAN MODE) AS relevance';
@@ -208,10 +210,10 @@ class SearchController
 
         return [
             'articles' => $articles,
-            'total' => $total,
-            'page' => $page,
-            'perPage' => $perPage,
-            'totalPages' => max(1, (int)ceil($total / $perPage))
+            'total' => $pagination['total'],
+            'page' => $pagination['page'],
+            'perPage' => $pagination['perPage'],
+            'totalPages' => $pagination['totalPages'],
         ];
     }
 

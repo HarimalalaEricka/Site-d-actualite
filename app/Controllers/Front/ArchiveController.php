@@ -6,6 +6,7 @@ namespace App\Controllers\Front;
 
 use App\Core\Database;
 use App\Models\Article;
+use App\Services\PaginationService;
 
 final class ArchiveController
 {
@@ -25,8 +26,7 @@ final class ArchiveController
 
         Database::closeConnection();
 
-        $totalPages = max(1, (int) ceil($total / $perPage));
-        $safePage = max(1, min($page, $totalPages));
+        $pagination = PaginationService::calculate($total, $page, $perPage);
 
         return [
             'availableMonths' => $availableMonths,
@@ -35,10 +35,10 @@ final class ArchiveController
             'year' => $year,
             'month' => $month,
             'selectedCategorySlug' => $categorySlug,
-            'page' => $safePage,
-            'perPage' => $perPage,
-            'total' => $total,
-            'totalPages' => $totalPages,
+            'page' => $pagination['page'],
+            'perPage' => $pagination['perPage'],
+            'total' => $pagination['total'],
+            'totalPages' => $pagination['totalPages'],
         ];
     }
 

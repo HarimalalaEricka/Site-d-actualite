@@ -19,6 +19,7 @@ require_once dirname(__DIR__) . '/app/Controllers/Front/ArticleController.php';
 require_once dirname(__DIR__) . '/app/Controllers/Front/ArchiveController.php';
 require_once dirname(__DIR__) . '/app/Controllers/Front/SearchController.php';
 require_once dirname(__DIR__) . '/app/Services/SimpleCache.php';
+require_once dirname(__DIR__) . '/app/Services/PaginationService.php';
 require_once dirname(__DIR__) . '/app/Services/ViewCounterService.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -38,14 +39,14 @@ $router->get('#^/$#', static function (): void {
 	exit;
 });
 
-$router->get('#^/([a-z]{2})/?$#', static function (string $lang): void {
+$router->get('#^/(fr|en)/?$#', static function (string $lang): void {
 	$homeController = new HomeController();
 	$homeData = $homeController->getHomeData($lang);
 
 	require __DIR__ . '/Views/Front/home.php';
 });
 
-$router->get('#^/([a-z]{2})/archives(?:/(\d{4})(?:/(\d{2}))?)?/?$#', static function (string $lang, ?string $year = null, ?string $month = null): void {
+$router->get('#^/(fr|en)/archives(?:/(\d{4})(?:/(\d{2}))?)?/?$#', static function (string $lang, ?string $year = null, ?string $month = null): void {
 	$yearInt = $year !== null ? (int) $year : null;
 	$monthInt = $month !== null ? (int) $month : null;
 
@@ -71,7 +72,7 @@ $router->get('#^/([a-z]{2})/archives(?:/(\d{4})(?:/(\d{2}))?)?/?$#', static func
 	require __DIR__ . '/Views/Front/archives.php';
 });
 
-$router->get('#^/([a-z]{2})/([a-z0-9-]+)/article/(\d{4})/(\d{2})/(\d{2})/(\d+)-([a-z0-9-]+)(?:\.html)?/?$#', static function (
+$router->get('#^/(fr|en)/([a-z0-9-]+)/article/(\d{4})/(\d{2})/(\d{2})/(\d+)-([a-z0-9-]+)(?:\.html)?/?$#', static function (
 	string $lang,
 	string $categorySlug,
 	string $year,
@@ -102,7 +103,7 @@ $router->get('#^/([a-z]{2})/([a-z0-9-]+)/article/(\d{4})/(\d{2})/(\d{2})/(\d+)-(
 	require __DIR__ . '/Views/Front/article.php';
 });
 
-$router->get('#^/([a-z]{2})/search/?$#', static function (string $lang): void {
+$router->get('#^/(fr|en)/search/?$#', static function (string $lang): void {
 	$query = isset($_GET['q']) ? (string) $_GET['q'] : null;
 	$categoryId = (isset($_GET['categorie']) && $_GET['categorie'] !== '') ? (int) $_GET['categorie'] : null;
 	$tagSlug = isset($_GET['tag']) ? (string) $_GET['tag'] : null;
@@ -121,7 +122,9 @@ $router->get('#^/([a-z]{2})/search/?$#', static function (string $lang): void {
 	require __DIR__ . '/Views/Front/search.php';
 });
 
-$router->get('#^/([a-z]{2})/([a-z0-9-]+)/?$#', static function (string $lang, string $categorySlug): void {
+$router->get('#^/(fr|en)/([a-z0-9-]+)/?$#', static function (string $lang, string $categorySlug): void {
+	$page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+
 	$categoryController = new CategoryController();
 	$category = $categoryController->findBySlug($categorySlug);
 
@@ -130,7 +133,7 @@ $router->get('#^/([a-z]{2})/([a-z0-9-]+)/?$#', static function (string $lang, st
 		return;
 	}
 
-	$articles = $categoryController->getPublishedByCategory((int) $category['Id_Categorie'], $lang);
+	$categoryData = $categoryController->getPublishedByCategory((int) $category['Id_Categorie'], $lang, $page, 10);
 
 	require __DIR__ . '/Views/Front/category.php';
 });
