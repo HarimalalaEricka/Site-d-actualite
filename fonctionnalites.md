@@ -65,8 +65,8 @@
 - Permet à l’administrateur d’avoir une vue d’ensemble rapide du contenu.
 
 ### 3. Gestion des articles
-- Fonction similaire à un flux Facebook : création, modification, suppression.  
-- Utilisation de **TinyMCE** pour l’édition des contenus riches (HTML).  
+- Fonction similaire à un flux Facebook : création, modification, suppression.
+- Creation de logiciel simple comme TinyMCE pour l'edition des contenus riches (HTML)  
 - Possibilité de définir le statut : brouillon ou publié.  
 - Les articles peuvent être liés à des catégories et des tags pour faciliter le filtrage.
 

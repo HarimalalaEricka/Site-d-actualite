@@ -1,0 +1,17 @@
+FROM php:8.2-apache
+
+WORKDIR /var/www/html
+
+# PDO MySQL pour la connexion base de données
+RUN docker-php-ext-install pdo pdo_mysql
+
+# Activer les modules Apache nécessaires
+RUN a2enmod rewrite headers expires deflate
+
+# Copier le code source (optionnel si tu montes le volume)
+# COPY . /var/www/html
+
+EXPOSE 80
+
+# Apache en premier plan
+CMD ["apache2-foreground"]

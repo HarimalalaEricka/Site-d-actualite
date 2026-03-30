@@ -4,24 +4,29 @@ declare(strict_types=1);
 
 namespace App\Controllers\Admin;
 
-use App\Services\RoleService;
+use App\Core\Database;
+use App\Models\Role;
 
 final class RoleController
 {
-    private RoleService $roleService;
-
-    public function __construct(?RoleService $roleService = null)
+    public function __construct()
     {
-        $this->roleService = $roleService ?? new RoleService();
     }
 
-    public function index(): array
+    public function getRoleByIdUser( int $idUser): ?Role
     {
-        $roles = $this->roleService->getAllRole();
+        $sql = 'SELECT r.* FROM Role r JOIN User_ u ON r.Id_Role = u.Id_Role WHERE u.Id_User = :idUser';
+        $statement = Database::getConnection()->prepare($sql);
+        $statement->execute([
+            ':idUser' => $idUser,
+        ]);
 
-        return array_map(
-            static fn ($role) => $role->toArray(),
-            $roles
-        );
+        $row = $statement->fetch();
+
+        if (!is_array($row) || !isset($row['Id_Role'])) {
+            return null;
+        }
+
+        return Role::fromArray($row);
     }
 }

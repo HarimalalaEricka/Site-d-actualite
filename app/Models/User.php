@@ -15,6 +15,26 @@ final class User
     private string $adresse = '';
     private ?int $idRole = null;
 
+    public function __construct(
+        ?int $idUser = null,
+        string $email = '',
+        string $nom = '',
+        string $prenom = '',
+        string $mdp = '',
+        string $numeroTel = '',
+        string $adresse = '',
+        ?int $idRole = null
+    ) {
+        $this->setIdUser($idUser);
+        $this->setEmail($email);
+        $this->setNom($nom);
+        $this->setPrenom($prenom);
+        $this->setMdp($mdp);
+        $this->setNumeroTel($numeroTel);
+        $this->setAdresse($adresse);
+        $this->setIdRole($idRole);
+    }
+
     public static function fromArray(array $data): self
     {
         $item = new self();
