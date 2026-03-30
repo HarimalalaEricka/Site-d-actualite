@@ -66,7 +66,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     } else {
         try {
             $articleController = new ArticleController();
-            $article = new Article(null, $titre, $datepub, $content, $nbrvues, $idUserPrincipal, $idStatusArticle, $idcategorie, $lang);
+            $article = new Article(
+                idArticle: null,
+                titre: $titre,
+                slug: '',
+                datePublication: $datepub,
+                contenu: $content,
+                nbrVues: $nbrvues,
+                idUserPrincipal: $idUserPrincipal,
+                idStatusArticle: $idStatusArticle,
+                idCategorie: $idcategorie,
+                lang: $lang
+            );
             $collaborationController = new CollaborationController();
             $hitoPublicationController = new HitoPublicationController();
             $idArticle = $articleController->createArticle($article);
