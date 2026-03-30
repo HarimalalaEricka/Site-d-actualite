@@ -14,9 +14,11 @@ final class ArticleController
      */
     public function getPublishedArticleById(int $idArticle, string $lang): ?array
     {
+                $connection = Database::getConnection();
+
         $sql = "SELECT a.Id_Article, a.titre, a.slug, a.date_publication, a.contenu, a.nbr_vues, a.lang,
                        a.Id_Categorie, c.categorie,
-                       u.prenom, u.nom,
+                                             u.Id_User AS principal_user_id, u.prenom, u.nom,
                        m.url AS image_url
                 FROM Article a
                 INNER JOIN status_article s ON s.Id_status_article = a.Id_status_article
@@ -28,7 +30,7 @@ final class ArticleController
                   AND s.status = 'publie'
                 LIMIT 1";
 
-        $statement = Database::getConnection()->prepare($sql);
+                $statement = $connection->prepare($sql);
         $statement->execute([
             ':idArticle' => $idArticle,
             ':lang' => $lang,
@@ -41,10 +43,134 @@ final class ArticleController
             return null;
         }
 
+        $row['contenu'] = $this->sanitizeContentHtml((string) ($row['contenu'] ?? ''));
         $row['slug'] = (string) ($row['slug'] ?? Article::slugify((string) ($row['titre'] ?? '')));
         $row['category_slug'] = Article::slugify((string) ($row['categorie'] ?? ''));
+        $row['tags'] = $this->getTagsByArticle($connection, (int) $row['Id_Article']);
+        $row['collaborations'] = $this->getCollaborationsByArticle(
+            $connection,
+            (int) $row['Id_Article'],
+            (int) ($row['principal_user_id'] ?? 0)
+        );
+        $row['media_gallery'] = $this->getSecondaryMediaByArticle($connection, (int) $row['Id_Article']);
+        $row['similar_articles'] = $this->getSimilarArticles(
+            $connection,
+            (int) $row['Id_Article'],
+            (int) ($row['Id_Categorie'] ?? 0),
+            (string) ($row['lang'] ?? 'fr')
+        );
+
+        Database::closeConnection();
 
         return $row;
+    }
+
+    /**
+     * @return array<int, array{Id_tag:int, nom:string}>
+     */
+    private function getTagsByArticle(\PDO $connection, int $idArticle): array
+    {
+        $sql = "SELECT t.Id_tag, t.nom
+                FROM article_tag atg
+                INNER JOIN tag t ON t.Id_tag = atg.Id_tag
+                WHERE atg.Id_Article = :idArticle
+                ORDER BY t.nom ASC";
+
+        $statement = $connection->prepare($sql);
+        $statement->execute([':idArticle' => $idArticle]);
+        $rows = $statement->fetchAll();
+
+        return is_array($rows) ? $rows : [];
+    }
+
+    /**
+     * @return array<int, array{Id_User:int, prenom:string, nom:string}>
+     */
+    private function getCollaborationsByArticle(\PDO $connection, int $idArticle, int $principalUserId): array
+    {
+        $sql = "SELECT u.Id_User, u.prenom, u.nom
+                FROM collaboration c
+                INNER JOIN User_ u ON u.Id_User = c.Id_User
+                WHERE c.Id_Article = :idArticle
+                  AND u.Id_User <> :principalUserId
+                ORDER BY u.nom ASC, u.prenom ASC";
+
+        $statement = $connection->prepare($sql);
+        $statement->execute([
+            ':idArticle' => $idArticle,
+            ':principalUserId' => $principalUserId,
+        ]);
+        $rows = $statement->fetchAll();
+
+        return is_array($rows) ? $rows : [];
+    }
+
+    /**
+     * @return array<int, array{Id_Media:int, url:string, description:string|null}>
+     */
+    private function getSecondaryMediaByArticle(\PDO $connection, int $idArticle): array
+    {
+        $sql = "SELECT m.Id_Media, m.url, m.description
+                FROM Media m
+                WHERE m.Id_Article = :idArticle
+                  AND (m.priorite = 0 OR m.priorite IS NULL)
+                ORDER BY m.Id_Media ASC";
+
+        $statement = $connection->prepare($sql);
+        $statement->execute([':idArticle' => $idArticle]);
+        $rows = $statement->fetchAll();
+
+        return is_array($rows) ? $rows : [];
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function getSimilarArticles(\PDO $connection, int $idArticle, int $categoryId, string $lang): array
+    {
+        $sql = "SELECT a.Id_Article, a.titre, a.slug, a.date_publication, c.categorie
+                FROM Article a
+                INNER JOIN status_article s ON s.Id_status_article = a.Id_status_article
+                INNER JOIN Categorie c ON c.Id_Categorie = a.Id_Categorie
+                WHERE a.Id_Article <> :idArticle
+                  AND a.Id_Categorie = :categoryId
+                  AND a.lang = :lang
+                  AND s.status = 'publie'
+                ORDER BY a.date_publication DESC, a.Id_Article DESC
+                LIMIT 3";
+
+        $statement = $connection->prepare($sql);
+        $statement->execute([
+            ':idArticle' => $idArticle,
+            ':categoryId' => $categoryId,
+            ':lang' => $lang,
+        ]);
+        $rows = $statement->fetchAll();
+
+        if (!is_array($rows)) {
+            return [];
+        }
+
+        foreach ($rows as &$row) {
+            if (is_array($row)) {
+                $row['slug'] = (string) ($row['slug'] ?? Article::slugify((string) ($row['titre'] ?? '')));
+                $row['category_slug'] = Article::slugify((string) ($row['categorie'] ?? ''));
+            }
+        }
+        unset($row);
+
+        return $rows;
+    }
+
+    private function sanitizeContentHtml(string $html): string
+    {
+        $withoutScripts = (string) preg_replace('#<script\b[^>]*>(.*?)</script>#is', '', $html);
+        $withoutStyles = (string) preg_replace('#<style\b[^>]*>(.*?)</style>#is', '', $withoutScripts);
+
+        return strip_tags(
+            $withoutStyles,
+            '<p><br><strong><em><ul><ol><li><h1><h2><h3><h4><blockquote><a><img>'
+        );
     }
 
     public function buildCanonicalPath(array $article): string

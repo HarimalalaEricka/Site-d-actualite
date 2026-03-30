@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 $featured = is_array($homeData['featured'] ?? null) ? $homeData['featured'] : null;
 $latest = is_array($homeData['latest'] ?? null) ? $homeData['latest'] : [];
+$popular = is_array($homeData['popular'] ?? null) ? $homeData['popular'] : [];
+$categories = is_array($homeData['categories'] ?? null) ? $homeData['categories'] : [];
 
 function e(string $value): string
 {
@@ -20,6 +22,10 @@ function e(string $value): string
 </head>
 <body>
     <main>
+        <nav>
+            <a href="/admin.php">Acceder au BackOffice</a>
+        </nav>
+
         <h1>Actualites</h1>
 
         <?php if ($featured !== null): ?>
@@ -51,6 +57,38 @@ function e(string $value): string
                 </ul>
             <?php endif; ?>
         </section>
+
+        <?php if ($popular !== []): ?>
+            <section>
+                <h2>Plus lus (derniere journee)</h2>
+                <ul>
+                    <?php foreach ($popular as $item): ?>
+                        <li>
+                            <a href="/<?php echo e($lang); ?>/<?php echo e((string) $item['category_slug']); ?>/article/<?php echo e(date('Y/m/d', strtotime((string) $item['date_publication']))); ?>/<?php echo e((string) $item['Id_Article']); ?>-<?php echo e((string) $item['slug']); ?>.html">
+                                <?php echo e((string) $item['titre']); ?>
+                            </a>
+                            <span>(<?php echo e((string) ((int) ($item['nbr_vues'] ?? 0))); ?> vues)</span>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </section>
+        <?php endif; ?>
+
+        <?php if ($categories !== []): ?>
+            <section>
+                <h2>Categories</h2>
+                <ul>
+                    <?php foreach ($categories as $cat): ?>
+                        <li>
+                            <a href="/<?php echo e($lang); ?>/<?php echo e((string) $cat['category_slug']); ?>">
+                                <?php echo e((string) $cat['categorie']); ?>
+                            </a>
+                            <span>(<?php echo e((string) ((int) ($cat['article_count'] ?? 0))); ?> articles)</span>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </section>
+        <?php endif; ?>
     </main>
 </body>
 </html>
