@@ -55,8 +55,36 @@ final class UserController
             adresse: (string) ($row['adresse'] ?? ''),
             idRole: isset($row['Id_Role']) ? (int) $row['Id_Role'] : null
         );
+
+        Database::closeConnection();
         return $user;
     }
+    public function getAllUsersExept( int $idUser): array
+    {
+        $sql = 'SELECT * FROM User_ WHERE Id_User != :idUser';
 
+        $statement = Database::getConnection()->prepare($sql);
+        $statement->execute([
+            ':idUser' => $idUser
+        ]);
+
+        $rows = $statement->fetchAll();
+
+        if (!is_array($rows) || $rows === []) {
+            return [];
+        }
+
+        $Users = [];
+
+        foreach ($rows as $row) {
+            if (is_array($row) && isset($row['Id_User'])) {
+                $Users[] = User::fromArray($row);
+            }
+        }
+
+        Database::closeConnection();
+
+        return $Users;
+    }
 }
 ?>

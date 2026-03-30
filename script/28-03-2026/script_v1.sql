@@ -80,7 +80,7 @@ CREATE TABLE Media(
 CREATE TABLE hito_publication(
    Id_hito_publication INT AUTO_INCREMENT,
    date_ DATETIME,
-   action VARCHAR(50) ENUM('creation', 'modification', 'publication', 'retrait') NOT NULL,
+   action ENUM('creation', 'modification', 'publication', 'retrait') NOT NULL,
    Id_Article INT NOT NULL,
    Id_User INT NOT NULL,
    PRIMARY KEY(Id_hito_publication),

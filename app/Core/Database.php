@@ -72,4 +72,8 @@ final class Database
 
         return self::$connection;
     }
+    public static function closeConnection(): void
+    {
+        self::$connection = null;
+    }
 }

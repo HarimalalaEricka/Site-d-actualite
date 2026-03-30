@@ -16,6 +16,28 @@ final class Article
     private ?int $idCategorie = null;
     private string $lang = '';
 
+    public function __construct(
+        ?int $idArticle = null,
+        string $titre = '',
+        string $datePublication = '',
+        string $contenu = '',
+        int $nbrVues = 0,
+        ?int $idUserPrincipal = null,
+        ?int $idStatusArticle = null,
+        ?int $idCategorie = null,
+        string $lang = ''
+    ) {
+        $this->setIdArticle($idArticle);
+        $this->setTitre($titre);
+        $this->setDatePublication($datePublication);
+        $this->setContenu($contenu);
+        $this->setNbrVues($nbrVues);
+        $this->setIdUserPrincipal($idUserPrincipal);
+        $this->setIdStatusArticle($idStatusArticle);
+        $this->setIdCategorie($idCategorie);
+        $this->setLang($lang);
+    }
+
     public static function fromArray(array $data): self
     {
         $item = new self();

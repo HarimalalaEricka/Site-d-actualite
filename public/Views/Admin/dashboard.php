@@ -100,6 +100,7 @@ if (!isset($_SESSION['login']) || !($_SESSION['login'] instanceof SessionLogin) 
     <div class="layout">
         <header class="topbar">
             <h1 class="brand">Back-office Actualite</h1>
+            <a class="logout" href="profile.php">Profil</a>
             <a class="logout" href="/logout.php">Se deconnecter</a>
         </header>
 

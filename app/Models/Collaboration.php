@@ -9,6 +9,12 @@ final class Collaboration
     private ?int $idUser = null;
     private ?int $idArticle = null;
 
+    public function __construct(?int $idUser = null, ?int $idArticle = null)
+    {
+        $this->setIdUser($idUser);
+        $this->setIdArticle($idArticle);
+    }
+
     public static function fromArray(array $data): self
     {
         $item = new self();

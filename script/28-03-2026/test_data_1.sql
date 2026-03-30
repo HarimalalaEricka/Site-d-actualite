@@ -19,7 +19,8 @@ INSERT INTO Categorie (categorie, description) VALUES
 INSERT INTO status_article (status) VALUES
 ('brouillon'),
 ('publie'),
-('rejete');
+('rejete'),
+('retire');
 
 -- TAGS
 INSERT INTO tag (nom) VALUES

@@ -26,7 +26,7 @@ final class RoleController
         if (!is_array($row) || !isset($row['Id_Role'])) {
             return null;
         }
-
+        Database::closeConnection();
         return Role::fromArray($row);
     }
 }
