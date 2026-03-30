@@ -55,12 +55,20 @@ final class ArticleController
     {
         $connection = Database::getConnection();
 
-        $sql = 'INSERT INTO Article (titre, date_publication, contenu, nbr_vues, Id_User_principal, Id_status_article, Id_Categorie, lang) 
-                VALUES (:titre, :date_publication, :contenu, :nbr_vues, :Id_User_principal, :Id_status_article, :Id_Categorie, :lang)';
+        if ($article->getSlug() === '') {
+            $article->setSlug($article->getTitre());
+        }
+
+        $uniqueSlug = $this->buildUniqueSlug($connection, $article->getSlug(), $article->getLang());
+        $article->setSlug($uniqueSlug);
+
+        $sql = 'INSERT INTO Article (titre, slug, date_publication, contenu, nbr_vues, Id_User_principal, Id_status_article, Id_Categorie, lang)
+                VALUES (:titre, :slug, :date_publication, :contenu, :nbr_vues, :Id_User_principal, :Id_status_article, :Id_Categorie, :lang)';
 
         $statement = $connection->prepare($sql);
         $statement->execute([
             ':titre' => $article->getTitre(),
+            ':slug' => $article->getSlug(),
             ':date_publication' => $article->getDatePublication(),
             ':contenu' => $article->getContenu(),
             ':nbr_vues' => $article->getNbrVues(),
@@ -82,6 +90,34 @@ final class ArticleController
 
         return $insertedId > 0 ? $insertedId : null;
     }
+
+    private function buildUniqueSlug(\PDO $connection, string $baseSlug, string $lang): string
+    {
+        $slug = $baseSlug !== '' ? $baseSlug : Article::slugify($baseSlug);
+        $candidate = $slug;
+        $suffix = 2;
+
+        while ($this->slugExists($connection, $candidate, $lang)) {
+            $candidate = $slug . '-' . $suffix;
+            $suffix++;
+        }
+
+        return $candidate;
+    }
+
+    private function slugExists(\PDO $connection, string $slug, string $lang): bool
+    {
+        $sql = 'SELECT 1 FROM Article WHERE slug = :slug AND lang = :lang LIMIT 1';
+        $statement = $connection->prepare($sql);
+        $statement->execute([
+            ':slug' => $slug,
+            ':lang' => $lang,
+        ]);
+
+        $result = $statement->fetchColumn();
+
+        return $result !== false;
+    }
     public function getArticleById(int $idArticle): ?Article
     {
         $sql = 'SELECT * FROM Article WHERE Id_Article = :idArticle';
@@ -100,9 +136,10 @@ final class ArticleController
         $article = new Article(
             idArticle: isset($row['Id_Article']) ? (int) $row['Id_Article'] : null,
             titre: (string) ($row['titre'] ?? ''),
+            slug: (string) ($row['slug'] ?? ''),
             datePublication: (string) ($row['date_publication'] ?? ''),
             contenu: (string) ($row['contenu'] ?? ''),
-            nbrVues: isset($row['nbr_vues']) ? (int) $row['nbr_vues'] : null,
+            nbrVues: isset($row['nbr_vues']) ? (int) $row['nbr_vues'] : 0,
             idUserPrincipal: isset($row['Id_User_principal']) ? (int) $row['Id_User_principal'] : null,
             idStatusArticle: isset($row['Id_status_article']) ? (int) $row['Id_status_article'] : null,
             idCategorie: isset($row['Id_Categorie']) ? (int) $row['Id_Categorie'] : null,
