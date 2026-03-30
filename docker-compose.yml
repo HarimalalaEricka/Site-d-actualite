@@ -18,7 +18,7 @@ services:
       DB_NAME: site_actus
       DB_USER: root
       DB_PASS: root
-    command: php -S 0.0.0.0:8000 public/router.php
+    command: php -S 0.0.0.0:8000 -t public public/router.php
 
   mysql:
     image: mysql:8.0

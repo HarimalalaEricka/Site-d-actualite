@@ -6,6 +6,7 @@ use App\Controllers\Front\ArticleController;
 use App\Controllers\Front\CategoryController;
 use App\Controllers\Front\HomeController;
 use App\Core\Router;
+use App\Services\ViewCounterService;
 
 require_once dirname(__DIR__) . '/app/Core/Database.php';
 require_once dirname(__DIR__) . '/app/Core/Router.php';
@@ -13,6 +14,12 @@ require_once dirname(__DIR__) . '/app/Models/Article.php';
 require_once dirname(__DIR__) . '/app/Controllers/Front/HomeController.php';
 require_once dirname(__DIR__) . '/app/Controllers/Front/CategoryController.php';
 require_once dirname(__DIR__) . '/app/Controllers/Front/ArticleController.php';
+require_once dirname(__DIR__) . '/app/Services/SimpleCache.php';
+require_once dirname(__DIR__) . '/app/Services/ViewCounterService.php';
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
+	session_start();
+}
 
 function renderNotFound(): void
 {
@@ -63,6 +70,9 @@ $router->get('#^/([a-z]{2})/([a-z0-9-]+)/article/(\d{4})/(\d{2})/(\d{2})/(\d+)-(
 		header('Location: ' . $canonicalPath, true, 301);
 		exit;
 	}
+
+	// Enregistrer la vue (anti-duplication 30 min, non bloquant)
+	ViewCounterService::recordView((int) $id);
 
 	require __DIR__ . '/Views/Front/article.php';
 });

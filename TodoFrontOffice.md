@@ -605,8 +605,8 @@ ALTER TABLE collaboration
 ## 13) Ordre d'execution recommande (2 semaines type)
 
 Semaine 1:
-- [ ] FO-001 Routing + slug + canonical
-- [ ] FO-002 Home optimisee
+- [x] FO-001 Routing + slug + canonical
+- [x] FO-002 Home optimisee
 - [ ] FO-003 Article detail
 - [ ] FO-005 Archives
 
