@@ -104,9 +104,4 @@ final class ViewCounterService
         $stmt->execute([':article_id' => $articleId]);
     }
 
-    public static function aggregateViewStats(): void
-    {
-        // Conservé pour compatibilité. Avec la stratégie simplifiée,
-        // le bloc "plus lus" lit directement Article.nbr_vues.
-    }
 }
