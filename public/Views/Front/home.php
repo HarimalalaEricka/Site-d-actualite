@@ -90,5 +90,9 @@ function e(string $value): string
             </section>
         <?php endif; ?>
     </main>
+
+    <footer>
+        <a href="/<?php echo e($lang); ?>/archives">Archives</a>
+    </footer>
 </body>
 </html>

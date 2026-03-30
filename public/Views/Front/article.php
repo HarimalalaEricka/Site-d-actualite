@@ -89,5 +89,9 @@ function e(string $value): string
             <?php endif; ?>
         </article>
     </main>
+
+    <footer>
+        <a href="/<?php echo e((string) ($article['lang'] ?? 'fr')); ?>/archives">Archives</a>
+    </footer>
 </body>
 </html>

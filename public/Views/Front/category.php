@@ -33,5 +33,9 @@ function e(string $value): string
             </ul>
         <?php endif; ?>
     </main>
+
+    <footer>
+        <a href="/<?php echo e($lang); ?>/archives">Archives</a>
+    </footer>
 </body>
 </html>

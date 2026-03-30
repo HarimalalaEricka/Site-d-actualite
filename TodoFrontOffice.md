@@ -430,22 +430,22 @@ Scope technique:
 - Pages archives + compteurs par mois.
 
 Taches implementation:
-- [ ] Route /archives, /archives/{yyyy}, /archives/{yyyy}/{mm}
-- [ ] Requete mois disponibles avec COUNT(*)
-- [ ] Requete listing mois cible (pagination)
-- [ ] Filtres lang + categorie
+- [x] Route /archives, /archives/{yyyy}, /archives/{yyyy}/{mm}
+- [x] Requete mois disponibles avec COUNT(*)
+- [x] Requete listing mois cible (pagination)
+- [x] Filtres lang + categorie
 
 SQL/Index:
-- [ ] Article: INDEX(date_publication)
-- [ ] Article: INDEX(Id_status_article, date_publication)
-- [ ] Article: INDEX(lang, Id_status_article, date_publication)
+- [x] Article: INDEX(date_publication)
+- [x] Article: INDEX(Id_status_article, date_publication)
+- [x] Article: INDEX(lang, Id_status_article, date_publication)
 
 Critere d'acceptation:
-- [ ] Temps reponse archive stable sous pagination
-- [ ] Exclusion stricte des brouillons
+- [x] Temps reponse archive stable sous pagination
+- [x] Exclusion stricte des brouillons
 
 Definition of Done:
-- [ ] Archives indexables SEO et navigables depuis footer
+- [x] Archives indexables SEO et navigables depuis footer
 
 ---
 
@@ -608,7 +608,7 @@ Semaine 1:
 - [x] FO-001 Routing + slug + canonical
 - [x] FO-002 Home optimisee
 - [x] FO-003 Article detail
-- [ ] FO-005 Archives
+- [x] FO-005 Archives
 
 Semaine 2:
 - [ ] FO-004 Compteur vues robuste
