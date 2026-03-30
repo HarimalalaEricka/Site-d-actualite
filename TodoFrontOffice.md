@@ -365,24 +365,24 @@ Scope technique:
 - Media prioritaire + galerie secondaire.
 
 Taches implementation:
-- [ ] Requete article detail par id + statut publie
-- [ ] Charger auteur principal + collaborations
-- [ ] Charger media prioritaire puis secondaires
-- [ ] Charger tags + similaires (meme categorie ou tags communs)
-- [ ] Sanitiser contenu HTML (liste blanche)
+- [x] Requete article detail par id + statut publie
+- [x] Charger auteur principal + collaborations
+- [x] Charger media prioritaire puis secondaires
+- [x] Charger tags + similaires (meme categorie ou tags communs)
+- [x] Sanitiser contenu HTML (liste blanche)
 
 SQL/Index:
-- [ ] Media: INDEX(Id_Article, priorite)
-- [ ] article_tag: INDEX(Id_tag, Id_Article)
-- [ ] collaboration: INDEX(Id_Article, Id_User)
+- [x] Media: INDEX(Id_Article, priorite)
+- [x] article_tag: INDEX(Id_tag, Id_Article)
+- [x] collaboration: INDEX(Id_Article, Id_User)
 
 Critere d'acceptation:
-- [ ] 1 seul media principal garanti
-- [ ] Affichage degrade propre si media absent
-- [ ] Similaires retournes en < 200 ms SQL
+- [x] 1 seul media principal garanti
+- [x] Affichage degrade propre si media absent
+- [x] Similaires retournes en < 200 ms SQL
 
 Definition of Done:
-- [ ] Page article complete sans erreur PHP/SQL
+- [x] Page article complete sans erreur PHP/SQL
 
 ---
 
@@ -607,7 +607,7 @@ ALTER TABLE collaboration
 Semaine 1:
 - [x] FO-001 Routing + slug + canonical
 - [x] FO-002 Home optimisee
-- [ ] FO-003 Article detail
+- [x] FO-003 Article detail
 - [ ] FO-005 Archives
 
 Semaine 2:
