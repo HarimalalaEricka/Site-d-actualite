@@ -83,7 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <a class="nav-link" href="../Article/nouvelle.php">Articles</a>
                 <a class="nav-link" href="../Categorie/gestion_categories.php">Categories</a>
                 <a class="nav-link" href="../Tag/gestion.php">Tags</a>
-                <a class="nav-link" href="../Media/gestion.php">Medias</a>
                 <a class="nav-link" href="../User/gestion.php">Gestion utilisateurs</a>
                 <a class="nav-link active" href="role.php">Roles & permissions</a>
             </nav>

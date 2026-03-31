@@ -163,10 +163,10 @@ window.addEventListener('unload', function() {
         </nav>
 
         <article>
-            <p>
-                Par <?php echo e(trim((string) $article['prenom'] . ' ' . (string) $article['nom'])); ?>
-                - <time datetime="<?php echo e((string) $article['date_publication']); ?>"><?php echo e((string) $article['date_publication']); ?></time>
-            </p>
+
+            
+            <h1><?php echo e($articleTitle); ?></h1>
+
 
             <?php if (is_array($article['collaborations'] ?? null) && $article['collaborations'] !== []): ?>
                 <p>
@@ -177,6 +177,7 @@ window.addEventListener('unload', function() {
                     <?php endforeach; ?>
                 </p>
             <?php endif; ?>
+            
 
             <?php if (isset($article['primary_media_url']) && (string) $article['primary_media_url'] !== ''): ?>
                 <?php if (($article['primary_media_kind'] ?? 'image') === 'video'): ?>
@@ -205,6 +206,10 @@ window.addEventListener('unload', function() {
             <section>
                 <?php echo (string) $article['contenu']; ?>
             </section>
+            <p>
+                Par <?php echo e(trim((string) $article['prenom'] . ' ' . (string) $article['nom'])); ?>
+                - <time datetime="<?php echo e((string) $article['date_publication']); ?>"><?php echo e((string) $article['date_publication']); ?></time>
+            </p>
 
             <?php if (is_array($article['media_gallery'] ?? null) && $article['media_gallery'] !== []): ?>
                 <section>
@@ -261,7 +266,7 @@ window.addEventListener('unload', function() {
                     <ul>
                         <?php foreach ($article['similar_articles'] as $similar): ?>
                             <li>
-                                <a href="/<?php echo e((string) ($article['lang'] ?? 'fr')); ?>/<?php echo e((string) ($similar['category_slug'] ?? 'actualite')); ?>/article/<?php echo e(date('Y/m/d', strtotime((string) ($similar['date_publication'] ?? 'now')))); ?>/<?php echo e((string) ($similar['Id_Article'] ?? '0')); ?>_<?php echo e((string) ($similar['slug'] ?? 'article')); ?>.html">
+                                <a href="/<?php echo e((string) ($article['lang'] ?? 'fr')); ?>/<?php echo e((string) ($similar['category_slug'] ?? 'actualite')); ?>/article/<?php echo e(date('Y/m/d', strtotime((string) ($similar['date_publication'] ?? 'now')))); ?>/<?php echo e((string) ($similar['Id_Article'] ?? '0')); ?>-<?php echo e((string) ($similar['slug'] ?? 'article')); ?>.html">
                                     <?php echo e((string) ($similar['titre'] ?? 'Article')); ?>
                                 </a>
                             </li>

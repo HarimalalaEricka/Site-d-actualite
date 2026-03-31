@@ -1,4 +1,4 @@
-<?php
+﻿<?php
     
 declare(strict_types=1);
 
@@ -145,7 +145,6 @@ function escape(string $value): string
                 <a class="nav-link active" href="nouvelle.php">Articles</a>
                 <a class="nav-link" href="../Categorie/gestion_categories.php">Categories</a>
                 <a class="nav-link" href="../Tag/gestion.php">Tags</a>
-                <a class="nav-link" href="../Media/gestion.php">Medias</a>
                 <a class="nav-link" href="../User/gestion.php">Gestion utilisateurs</a>
                 <?php if ($role === 'admin'): ?>
                     <a class="nav-link" href="../Role/role.php">Roles & permissions</a>
