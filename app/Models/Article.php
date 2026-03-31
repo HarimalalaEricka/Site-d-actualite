@@ -158,4 +158,19 @@ final class Article
     {
         $this->lang = trim($lang);
     }
+
+    public static function slugify(string $text): string
+    {
+        $text = trim(mb_strtolower($text));
+
+        $transliterated = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $text);
+        if ($transliterated !== false) {
+            $text = $transliterated;
+        }
+
+        $text = preg_replace('/[^a-z0-9]+/', '-', $text) ?? '';
+        $text = trim($text, '-');
+
+        return $text !== '' ? $text : 'article';
+    }
 }

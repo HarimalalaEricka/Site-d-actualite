@@ -73,9 +73,9 @@ $role = $login->getRole();
                 </article>
 
                 <article class="card">
-                    <h3>Mediatheque</h3>
-                    <p>Organisez les medias utilises par les contenus redactionnels.</p>
-                    <a class="action-link" href="Media/gestion.php">Gerer les medias</a>
+                    <h3>Categorie</h3>
+                    <p>Organisez les categories utilises par les contenus redactionnels.</p>
+                    <a class="action-link" href="Categorie/gestion_categories.php">Gerer les categories</a>
                 </article>
             </section>
         </main>
