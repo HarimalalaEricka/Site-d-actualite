@@ -205,7 +205,7 @@ if ($queryParams !== []) {
                         <?php foreach ($searchData['articles'] as $article): ?>
                             <article class="article-card">
                                 <h3>
-                                    <a href="/<?= htmlspecialchars($lang) ?>/<?= htmlspecialchars($article['category_slug']) ?>/article/<?= date('Y/m/d', strtotime($article['date_publication'])) ?>/<?= htmlspecialchars((string) $article['Id_Article']) ?>-<?= htmlspecialchars($article['slug']) ?>.html">
+                                    <a href="/<?= htmlspecialchars($lang) ?>/<?= htmlspecialchars($article['category_slug']) ?>/article/<?= date('Y/m/d', strtotime($article['date_publication'])) ?>/<?= htmlspecialchars((string) $article['Id_Article']) ?>_<?= htmlspecialchars($article['slug']) ?>.html">
                                         <?= htmlspecialchars($article['titre']) ?>
                                     </a>
                                 </h3>

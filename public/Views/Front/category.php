@@ -74,7 +74,7 @@ $metaDescription = 'Articles de la categorie ' . (string) $category['categorie']
             <ul>
                 <?php foreach ($categoryData['articles'] as $article): ?>
                     <li>
-                        <a href="/<?php echo e($lang); ?>/<?php echo e((string) $article['category_slug']); ?>/article/<?php echo e(date('Y/m/d', strtotime((string) $article['date_publication']))); ?>/<?php echo e((string) $article['Id_Article']); ?>-<?php echo e((string) $article['slug']); ?>.html">
+                        <a href="/<?php echo e($lang); ?>/<?php echo e((string) $article['category_slug']); ?>/article/<?php echo e(date('Y/m/d', strtotime((string) $article['date_publication']))); ?>/<?php echo e((string) $article['Id_Article']); ?>_<?php echo e((string) $article['slug']); ?>.html">
                             <?php echo e((string) $article['titre']); ?>
                         </a>
                     </li>

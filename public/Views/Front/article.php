@@ -163,7 +163,6 @@ window.addEventListener('unload', function() {
         </nav>
 
         <article>
-            <h1><?php echo e((string) $article['titre']); ?></h1>
             <p>
                 Par <?php echo e(trim((string) $article['prenom'] . ' ' . (string) $article['nom'])); ?>
                 - <time datetime="<?php echo e((string) $article['date_publication']); ?>"><?php echo e((string) $article['date_publication']); ?></time>
@@ -262,7 +261,7 @@ window.addEventListener('unload', function() {
                     <ul>
                         <?php foreach ($article['similar_articles'] as $similar): ?>
                             <li>
-                                <a href="/<?php echo e((string) ($article['lang'] ?? 'fr')); ?>/<?php echo e((string) ($similar['category_slug'] ?? 'actualite')); ?>/article/<?php echo e(date('Y/m/d', strtotime((string) ($similar['date_publication'] ?? 'now')))); ?>/<?php echo e((string) ($similar['Id_Article'] ?? '0')); ?>-<?php echo e((string) ($similar['slug'] ?? 'article')); ?>.html">
+                                <a href="/<?php echo e((string) ($article['lang'] ?? 'fr')); ?>/<?php echo e((string) ($similar['category_slug'] ?? 'actualite')); ?>/article/<?php echo e(date('Y/m/d', strtotime((string) ($similar['date_publication'] ?? 'now')))); ?>/<?php echo e((string) ($similar['Id_Article'] ?? '0')); ?>_<?php echo e((string) ($similar['slug'] ?? 'article')); ?>.html">
                                     <?php echo e((string) ($similar['titre'] ?? 'Article')); ?>
                                 </a>
                             </li>

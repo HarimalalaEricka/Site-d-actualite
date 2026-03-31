@@ -139,7 +139,7 @@ if ($year !== null && $month !== null) {
                 <ul>
                     <?php foreach ($articles as $articleItem): ?>
                         <li>
-                            <a href="/<?php echo e((string) ($articleItem['lang'] ?? $lang)); ?>/<?php echo e((string) ($articleItem['category_slug'] ?? 'actualite')); ?>/article/<?php echo e(date('Y/m/d', strtotime((string) ($articleItem['date_publication'] ?? 'now')))); ?>/<?php echo e((string) ($articleItem['Id_Article'] ?? '0')); ?>-<?php echo e((string) ($articleItem['slug'] ?? 'article')); ?>.html">
+                            <a href="/<?php echo e((string) ($articleItem['lang'] ?? $lang)); ?>/<?php echo e((string) ($articleItem['category_slug'] ?? 'actualite')); ?>/article/<?php echo e(date('Y/m/d', strtotime((string) ($articleItem['date_publication'] ?? 'now')))); ?>/<?php echo e((string) ($articleItem['Id_Article'] ?? '0')); ?>_<?php echo e((string) ($articleItem['slug'] ?? 'article')); ?>.html">
                                 <?php echo e((string) ($articleItem['titre'] ?? 'Article')); ?>
                             </a>
                             <small>

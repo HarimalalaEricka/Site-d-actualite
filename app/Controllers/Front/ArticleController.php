@@ -233,7 +233,7 @@ final class ArticleController
         $id = (int) ($article['Id_Article'] ?? 0);
         $slug = (string) ($article['slug'] ?? 'article');
 
-        return sprintf('/%s/%s/article/%s/%s/%s/%d-%s.html', $lang, $categorySlug, $year, $month, $day, $id, $slug);
+        return sprintf('/%s/%s/article/%s/%s/%s/%d_%s.html', $lang, $categorySlug, $year, $month, $day, $id, $slug);
     }
 
     /**

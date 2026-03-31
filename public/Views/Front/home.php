@@ -79,7 +79,7 @@ function switchLangUrl(string $currentLang, string $targetLang): string
                         <img src="<?php echo e($featured['image_url']); ?>" alt="Image principale" style="width:100%;max-width:700px;height:auto;display:block;margin:0 auto 16px auto;border-radius:8px;object-fit:cover;">
                     <?php endif; ?>
                     <h3>
-                        <a href="/<?php echo e($lang); ?>/<?php echo e((string) $featured['category_slug']); ?>/article/<?php echo e(date('Y/m/d', strtotime((string) $featured['date_publication']))); ?>/<?php echo e((string) $featured['Id_Article']); ?>-<?php echo e((string) $featured['slug']); ?>.html">
+                        <a href="/<?php echo e($lang); ?>/<?php echo e((string) $featured['category_slug']); ?>/article/<?php echo e(date('Y/m/d', strtotime((string) $featured['date_publication']))); ?>/<?php echo e((string) $featured['Id_Article']); ?>_<?php echo e((string) $featured['slug']); ?>.html">
                             <?php echo e((string) $featured['titre']); ?>
                         </a>
                     </h3>
@@ -99,7 +99,7 @@ function switchLangUrl(string $currentLang, string $targetLang): string
                 <ul>
                     <?php foreach ($latest as $item): ?>
                         <li>
-                            <a href="/<?php echo e($lang); ?>/<?php echo e((string) $item['category_slug']); ?>/article/<?php echo e(date('Y/m/d', strtotime((string) $item['date_publication']))); ?>/<?php echo e((string) $item['Id_Article']); ?>-<?php echo e((string) $item['slug']); ?>.html">
+                            <a href="/<?php echo e($lang); ?>/<?php echo e((string) $item['category_slug']); ?>/article/<?php echo e(date('Y/m/d', strtotime((string) $item['date_publication']))); ?>/<?php echo e((string) $item['Id_Article']); ?>_<?php echo e((string) $item['slug']); ?>.html">
                                 <?php echo e((string) $item['titre']); ?>
                             </a>
                             <div class="excerpt" style="display:flex;align-items:flex-start;gap:10px;">
@@ -122,7 +122,7 @@ function switchLangUrl(string $currentLang, string $targetLang): string
                 <ul>
                     <?php foreach ($popular as $item): ?>
                         <li>
-                            <a href="/<?php echo e($lang); ?>/<?php echo e((string) $item['category_slug']); ?>/article/<?php echo e(date('Y/m/d', strtotime((string) $item['date_publication']))); ?>/<?php echo e((string) $item['Id_Article']); ?>-<?php echo e((string) $item['slug']); ?>.html">
+                            <a href="/<?php echo e($lang); ?>/<?php echo e((string) $item['category_slug']); ?>/article/<?php echo e(date('Y/m/d', strtotime((string) $item['date_publication']))); ?>/<?php echo e((string) $item['Id_Article']); ?>_<?php echo e((string) $item['slug']); ?>.html">
                                 <?php echo e((string) $item['titre']); ?>
                             </a>
                             <span>(<?php echo e((string) ((int) ($item['nbr_vues'] ?? 0))); ?> vues)</span>
