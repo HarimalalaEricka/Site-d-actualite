@@ -75,14 +75,21 @@ function switchLangUrl(string $currentLang, string $targetLang): string
             <section class="news-grid popular-news">
                 <h2>A la une</h2>
                 <article class="featured-article">
+                    <?php if (!empty($featured['image_url'])): ?>
+                        <img src="<?php echo e($featured['image_url']); ?>" alt="Image principale" style="width:100%;max-width:700px;height:auto;display:block;margin:0 auto 16px auto;border-radius:8px;object-fit:cover;">
+                    <?php endif; ?>
                     <h3>
                         <a href="/<?php echo e($lang); ?>/<?php echo e((string) $featured['category_slug']); ?>/article/<?php echo e(date('Y/m/d', strtotime((string) $featured['date_publication']))); ?>/<?php echo e((string) $featured['Id_Article']); ?>-<?php echo e((string) $featured['slug']); ?>.html">
                             <?php echo e((string) $featured['titre']); ?>
                         </a>
                     </h3>
+                    <div class="excerpt">
+                        <?php echo isset($featured['contenu']) ? mb_substr(strip_tags((string) $featured['contenu']), 0, 120) . '...' : ''; ?>
+                    </div>
                 </article>
             </section>
         <?php endif; ?>
+
 
         <section class="news-grid latest-news">
             <h2>Dernieres actualites</h2>
@@ -95,6 +102,14 @@ function switchLangUrl(string $currentLang, string $targetLang): string
                             <a href="/<?php echo e($lang); ?>/<?php echo e((string) $item['category_slug']); ?>/article/<?php echo e(date('Y/m/d', strtotime((string) $item['date_publication']))); ?>/<?php echo e((string) $item['Id_Article']); ?>-<?php echo e((string) $item['slug']); ?>.html">
                                 <?php echo e((string) $item['titre']); ?>
                             </a>
+                            <div class="excerpt" style="display:flex;align-items:flex-start;gap:10px;">
+                                <?php if (!empty($item['image_url'])): ?>
+                                    <img src="<?php echo e($item['image_url']); ?>" alt="Image actu" style="width:70px;height:45px;object-fit:cover;border-radius:4px;">
+                                <?php endif; ?>
+                                <span>
+                                    <?php echo isset($item['contenu']) ? mb_substr(strip_tags((string) $item['contenu']), 0, 120) . '...' : ''; ?>
+                                </span>
+                            </div>
                         </li>
                     <?php endforeach; ?>
                 </ul>

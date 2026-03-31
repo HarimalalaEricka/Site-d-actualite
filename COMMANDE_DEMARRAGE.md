@@ -1,4 +1,5 @@
 <!-- Demarrage de l'app -->
+docker compose down -v
 docker compose up
 
 <!-- Accede au cli mysql dans docker-->

@@ -60,15 +60,16 @@ final class HomeController
 
         // === REQUÊTE 1: Dernières + A la une (utilise index: lang, status, date DESC) ===
         $sql = "SELECT a.Id_Article, a.titre, a.slug, a.date_publication, a.nbr_vues, a.lang,
-                       c.Id_Categorie, c.categorie,
-                       m.url AS image_url
-                FROM Article a
-                INNER JOIN status_article s ON s.Id_status_article = a.Id_status_article
-                INNER JOIN Categorie c ON c.Id_Categorie = a.Id_Categorie
-                LEFT JOIN Media m ON m.Id_Article = a.Id_Article AND m.priorite = 1
-                WHERE s.status = 'publie' AND a.lang = :lang
-                ORDER BY a.date_publication DESC, a.Id_Article DESC
-                LIMIT " . (self::FEATURED_COUNT + self::LATEST_COUNT);
+                   a.contenu,
+                   c.Id_Categorie, c.categorie,
+                   m.url AS image_url
+            FROM Article a
+            INNER JOIN status_article s ON s.Id_status_article = a.Id_status_article
+            INNER JOIN Categorie c ON c.Id_Categorie = a.Id_Categorie
+            LEFT JOIN Media m ON m.Id_Article = a.Id_Article AND m.priorite = 1
+            WHERE s.status = 'publie' AND a.lang = :lang
+            ORDER BY a.date_publication DESC, a.Id_Article DESC
+            LIMIT " . (self::FEATURED_COUNT + self::LATEST_COUNT);
 
         $stmt = $connection->prepare($sql);
         $stmt->execute([':lang' => $lang]);

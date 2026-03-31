@@ -87,13 +87,16 @@ function escape(string $value): string
 
 		<form method="post" action="admin.php" novalidate>
 			<label for="email">Email</label>
-			<input id="email" name="email" type="email" value="<?php echo escape($email); ?>" required>
+			<input id="email" name="email" type="email" value="<?php echo escape($email !== '' ? $email : 'admin@example.com'); ?>" required>
 
 			<label for="password">Mot de passe</label>
-			<input id="password" name="password" type="password" required>
+			<input id="password" name="password" type="password" value="adminpass" required>
 
 			<button type="submit">Se connecter</button>
 		</form>
+		<p style="margin-top:2em;text-align:center;">
+			<a href="/" style="color:#007bff;text-decoration:underline;">← Retour au site public</a>
+		</p>
 	</main>
 </body>
 </html>
