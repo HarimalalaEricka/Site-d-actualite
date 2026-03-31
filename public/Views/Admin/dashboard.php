@@ -10,6 +10,9 @@ if (!isset($_SESSION['login']) || !($_SESSION['login'] instanceof SessionLogin) 
     header('Location: /admin.php');
     exit;
 }
+$login = $_SESSION['login'];
+$idUser = $login->getIdUser();
+$role = $login->getRole();
 
 ?>
 <!doctype html>
@@ -19,94 +22,62 @@ if (!isset($_SESSION['login']) || !($_SESSION['login'] instanceof SessionLogin) 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="BackOffice d'un site d'actualite sur la guerre en Iran.">
     <title>Dashboard Admin</title>
-    <style>
-        :root {
-            --bg: #f8fafc;
-            --panel: #ffffff;
-            --text: #0f172a;
-            --muted: #64748b;
-            --primary: #0f766e;
-            --primary-hover: #115e59;
-            --border: #e2e8f0;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--text);
-            background:
-                radial-gradient(circle at 10% 10%, #dbeafe 0%, transparent 35%),
-                radial-gradient(circle at 90% 20%, #ccfbf1 0%, transparent 30%),
-                var(--bg);
-            min-height: 100vh;
-            padding: 24px;
-        }
-
-        .layout {
-            max-width: 980px;
-            margin: 0 auto;
-        }
-
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 18px;
-        }
-
-        .brand {
-            margin: 0;
-            font-size: 1.4rem;
-        }
-
-        .logout {
-            text-decoration: none;
-            background: var(--primary);
-            color: #fff;
-            border-radius: 10px;
-            padding: 10px 14px;
-            font-weight: 600;
-        }
-
-        .logout:hover {
-            background: var(--primary-hover);
-        }
-
-        .card {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 24px;
-            box-shadow: 0 14px 36px rgba(2, 6, 23, 0.08);
-        }
-
-        .subtitle {
-            margin: 0;
-            color: var(--muted);
-        }
-
-        .welcome {
-            margin: 8px 0 0;
-            font-size: 1.1rem;
-        }
-    </style>
+    <link rel="stylesheet" href="/assets/css/Admin/dashboard.css">
 </head>
 <body>
-    <div class="layout">
-        <header class="topbar">
-            <h1 class="brand">Back-office Actualite</h1>
-            <a class="logout" href="profile.php">Profil</a>
-            <a class="logout" href="/logout.php">Se deconnecter</a>
-        </header>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <h1>Back-office</h1>
+                <p>Site d'actualite</p>
+            </div>
 
-        <main class="card">
-            <p class="subtitle">Dashboard admin</p>
-            <p class="welcome">Bienvenue.</p>
+            <nav class="sidebar-nav" aria-label="Navigation principale">
+                <a class="nav-link active" href="dashboard.php">Dashboard</a>
+                <a class="nav-link" href="Article/nouvelle.php">Articles</a>
+                <a class="nav-link" href="Categorie/gestion_categories.php">Categories</a>
+                <a class="nav-link" href="Tag/gestion.php">Tags</a>
+                <!-- <a class="nav-link" href="Media/gestion.php">Medias</a> -->
+                <a class="nav-link" href="User/gestion.php">Gestion utilisateurs</a>
+                <?php
+                    if ($role === 'admin') {
+                        echo '<a class="nav-link" href="Role/role.php">Roles & permissions</a>';
+                    }
+                ?>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a class="footer-link" href="profile.php">Mon profil</a>
+                <a class="footer-link logout" href="/logout.php">Se deconnecter</a>
+            </div>
+        </aside>
+
+        <main class="dashboard-main">
+            <header class="main-header card">
+                <p class="subtitle">Dashboard admin</p>
+                <h2>Bienvenue sur votre espace de gestion</h2>
+                <p class="welcome">Utilisateur connecte : #<?= htmlspecialchars((string)$idUser, ENT_QUOTES, 'UTF-8') ?> (role: <?= htmlspecialchars((string)$role, ENT_QUOTES, 'UTF-8') ?>)</p>
+            </header>
+
+            <section class="cards-grid">
+                <article class="card">
+                    <h3>Gestion rapide</h3>
+                    <p>Accedez en un clic aux sections importantes du back-office.</p>
+                    <a class="action-link" href="User/gestion.php">Ouvrir la gestion des utilisateurs</a>
+                </article>
+
+                <article class="card">
+                    <h3>Publication</h3>
+                    <p>Creez, modifiez et publiez les derniers articles du site.</p>
+                    <a class="action-link" href="Article/nouvelle.php">Ajouter un article</a>
+                </article>
+
+                <article class="card">
+                    <h3>Mediatheque</h3>
+                    <p>Organisez les medias utilises par les contenus redactionnels.</p>
+                    <a class="action-link" href="Media/gestion.php">Gerer les medias</a>
+                </article>
+            </section>
         </main>
     </div>
 </body>

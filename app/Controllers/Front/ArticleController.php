@@ -235,4 +235,29 @@ final class ArticleController
 
         return sprintf('/%s/%s/article/%s/%s/%s/%d-%s.html', $lang, $categorySlug, $year, $month, $day, $id, $slug);
     }
+
+    /**
+     * Incrémente le compteur de vues d'un article
+     *
+     * @param int $idArticle L'ID de l'article
+     * @return bool True si l'incrémentation a réussi, false sinon
+     */
+    public function incrementArticleViews(int $idArticle): bool
+    {
+        try {
+            $connection = Database::getConnection();
+
+            $sql = 'UPDATE Article SET nbr_vues = nbr_vues + 1 WHERE Id_Article = :idArticle';
+            $statement = $connection->prepare($sql);
+            $result = $statement->execute([
+                ':idArticle' => $idArticle,
+            ]);
+
+            Database::closeConnection();
+
+            return $result;
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
 }

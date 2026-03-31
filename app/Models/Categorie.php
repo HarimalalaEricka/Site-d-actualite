@@ -10,6 +10,14 @@ final class Categorie
     private string $categorie = '';
     private string $description = '';
 
+    public function __construct(
+        string $categorie = '',
+        string $description = '',
+    ) {
+        $this->setCategorie($categorie);
+        $this->setDescription($description);
+    }
+
     public static function fromArray(array $data): self
     {
         $item = new self();

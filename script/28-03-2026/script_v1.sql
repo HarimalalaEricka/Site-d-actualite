@@ -52,7 +52,6 @@ CREATE TABLE status_article(
 CREATE TABLE Article(
    Id_Article INT AUTO_INCREMENT,
    titre VARCHAR(250) ,
-   slug VARCHAR(300) NOT NULL,
    date_publication DATETIME NOT NULL,
    contenu TEXT, -- venant de TinyMCE de format HTML
    nbr_vues INT, -- incrementation d'un compteur en mémoire ou dans un petit fichier local(ex: json) et insertion dans la base toutes les heures ou meme tous les jours pour eviter de faire une requete d'incrementation a chaque vue et donc saturer la base de données
@@ -61,7 +60,6 @@ CREATE TABLE Article(
    Id_Categorie INT NOT NULL,
    lang ENUM('fr', 'en') NOT NULL,
    PRIMARY KEY(Id_Article),
-   UNIQUE KEY uq_article_lang_slug (lang, slug),
    FOREIGN KEY(Id_User_principal) REFERENCES User_(Id_User),
    FOREIGN KEY(Id_status_article) REFERENCES status_article(Id_status_article),
    FOREIGN KEY(Id_Categorie) REFERENCES Categorie(Id_Categorie)

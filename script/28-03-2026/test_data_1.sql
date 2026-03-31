@@ -36,10 +36,10 @@ INSERT INTO type_media (type) VALUES
 ('video');
 
 -- ARTICLES (IMPORTANT)
-INSERT INTO Article (titre, slug, date_publication, contenu, nbr_vues, Id_User_principal, Id_status_article, Id_Categorie, lang) VALUES
+INSERT INTO Article (titre, date_publication, contenu, nbr_vues, Id_User_principal, Id_status_article, Id_Categorie, lang) VALUES
 
 -- ARTICLE 1
-('Tensions croissantes entre l’Iran et les États-Unis', 'tensions-croissantes-entre-l-iran-et-les-etats-unis', NOW(),
+('Tensions croissantes entre l’Iran et les États-Unis', NOW(),
 '<h1>Tensions croissantes entre l’Iran et les États-Unis</h1>
 
 <p>Les tensions entre l’Iran et les États-Unis ont atteint un niveau critique ces derniers jours. Plusieurs incidents militaires ont été signalés dans le golfe Persique.</p>
@@ -56,7 +56,7 @@ INSERT INTO Article (titre, slug, date_publication, contenu, nbr_vues, Id_User_p
 ', 120, 2, 2, 2, 'fr'),
 
 -- ARTICLE 2
-('Iran conflict: rising tensions in Middle East', 'iran-conflict-rising-tensions-in-middle-east', NOW(),
+('Iran conflict: rising tensions in Middle East', NOW(),
 '<h1>Iran conflict: rising tensions in Middle East</h1>
 
 <p>The situation in the Middle East is becoming increasingly unstable as tensions rise between Iran and Western countries.</p>
@@ -73,7 +73,7 @@ INSERT INTO Article (titre, slug, date_publication, contenu, nbr_vues, Id_User_p
 ', 85, 3, 2, 3, 'en'),
 
 -- ARTICLE 3
-('Négociations diplomatiques en cours', 'negociations-diplomatiques-en-cours', NOW(),
+('Négociations diplomatiques en cours', NOW(),
 '<h1>Négociations diplomatiques en cours</h1>
 
 <p>Des discussions diplomatiques sont actuellement en cours pour tenter d’éviter un conflit ouvert.</p>

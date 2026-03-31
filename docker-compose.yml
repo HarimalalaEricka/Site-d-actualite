@@ -33,7 +33,6 @@ services:
       - mysql_data:/var/lib/mysql
       - ./script/28-03-2026/script_v1.sql:/docker-entrypoint-initdb.d/01-schema.sql
       - ./script/28-03-2026/test_data_1.sql:/docker-entrypoint-initdb.d/02-data.sql
-      - ./script/28-03-2026/V6__add_all_indexes.sql:/docker-entrypoint-initdb.d/04-add-all-indexes.sql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s

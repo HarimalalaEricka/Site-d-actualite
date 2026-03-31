@@ -19,6 +19,7 @@ if (!isset($_SESSION['login']) || !($_SESSION['login'] instanceof SessionLogin) 
 
 $login = $_SESSION['login'];
 $idUser = $login->getIdUser();
+$role = $login->getRole();
 
 if ($idUser === null) {
     header('Location: /logout.php');
@@ -47,44 +48,102 @@ function nullableIntToString(?int $value): string
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Page de profil d'un BackOffice d'un site d'actualite sur la guerre en Iran.">
-    <title>Profil Utilisateur</title>
+    <meta name="description" content="Gestion des brouillons d'un BackOffice d'un site d'actualite sur la guerre en Iran.">
+    <title>Mes brouillons</title>
+    <link rel="stylesheet" href="/assets/css/Admin/dashboard.css">
+    <link rel="stylesheet" href="/assets/css/Admin/profile.css">
 </head>
 <body>
-    <div class="layout">
-        <h1>Profil</h1>
-        <h2>Mes articles</h2>
-        <?php if ($flashSuccess !== ''): ?>
-            <div class="notice success"><?php echo escape($flashSuccess); ?></div>
-        <?php endif; ?>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <h1>Back-office</h1>
+                <p>Site d'actualite</p>
+            </div>
 
-        <?php if ($flashError !== ''): ?>
-            <div class="notice error"><?php echo escape($flashError); ?></div>
-        <?php endif; ?>
+            <nav class="sidebar-nav" aria-label="Navigation principale">
+                <a class="nav-link" href="../dashboard.php">Dashboard</a>
+                <a class="nav-link active" href="brouillon.php">Articles</a>
+                <a class="nav-link" href="../Categorie/gestion_categories.php">Categories</a>
+                <a class="nav-link" href="../Tag/gestion.php">Tags</a>
+                <a class="nav-link" href="../Media/gestion.php">Medias</a>
+                <a class="nav-link" href="../User/gestion.php">Gestion utilisateurs</a>
+                <?php if ($role === 'admin'): ?>
+                    <a class="nav-link" href="../Role/role.php">Roles & permissions</a>
+                <?php endif; ?>
+            </nav>
 
-        <?php if ($articles === []): ?>
-            <p>Aucun article trouve pour cet utilisateur.</p>
-        <?php else: ?>
-            <ul>
-                <?php foreach ($articles as $article): ?>
-                    <li>
-                        <h3><?php echo escape($article->getTitre()); ?></h3>
-                        <a href="Article/editer.php?idArticle=<?php echo $article->getIdArticle(); ?>">Editer</a>
-                        <a href="Article/supprimer.php?idArticle=<?php echo $article->getIdArticle(); ?>">Supprimer</a>
-                        <a href="publier.php?idArticle=<?php echo $article->getIdArticle(); ?>">Publier</a>
-                        <p><strong>Id_Article:</strong> <?php echo escape(nullableIntToString($article->getIdArticle())); ?></p>
-                        <p><strong>Date de publication:</strong> <?php echo escape($article->getDatePublication()); ?></p>
-                        <p><strong>Contenu:</strong></p>
-                        <div><?php echo $article->getContenu(); ?></div>
-                        <p><strong>Nombre de vues:</strong> <?php echo escape((string) $article->getNbrVues()); ?></p>
-                        <p><strong>Id_User_principal:</strong> <?php echo escape(nullableIntToString($article->getIdUserPrincipal())); ?></p>
-                        <p><strong>Id_status_article:</strong> <?php echo escape(nullableIntToString($article->getIdStatusArticle())); ?></p>
-                        <p><strong>Id_Categorie:</strong> <?php echo escape(nullableIntToString($article->getIdCategorie())); ?></p>
-                        <p><strong>Lang:</strong> <?php echo escape($article->getLang()); ?></p>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
+            <div class="sidebar-footer">
+                <a class="footer-link" href="../profile.php">Mon profil</a>
+                <a class="footer-link logout" href="/logout.php">Se deconnecter</a>
+            </div>
+        </aside>
+
+        <main class="dashboard-main profile-main">
+            <header class="card main-header">
+                <p class="subtitle">Articles</p>
+                <h2>Mes brouillons</h2>
+                <p class="welcome">Retrouvez vos articles en cours et publiez-les quand ils sont prets.</p>
+            </header>
+
+            <?php if ($flashSuccess !== ''): ?>
+                <div class="notice success"><?php echo escape($flashSuccess); ?></div>
+            <?php endif; ?>
+
+            <?php if ($flashError !== ''): ?>
+                <div class="notice error"><?php echo escape($flashError); ?></div>
+            <?php endif; ?>
+
+            <section class="card">
+                <?php if ($articles === []): ?>
+                    <p class="empty-state">Aucun brouillon trouve pour cet utilisateur.</p>
+                <?php else: ?>
+                    <ul class="article-list">
+                        <?php foreach ($articles as $article): ?>
+                            <li class="article-item">
+                                <div class="article-head">
+                                    <h4><?php echo escape($article->getTitre()); ?></h4>
+                                    <p class="article-date"><?php echo escape($article->getDatePublication()); ?></p>
+                                </div>
+
+                                <div class="article-meta-grid">
+                                    <div class="meta-item">
+                                        <span class="meta-label">ID article</span>
+                                        <strong><?php echo escape(nullableIntToString($article->getIdArticle())); ?></strong>
+                                    </div>
+                                    <div class="meta-item">
+                                        <span class="meta-label">Vues</span>
+                                        <strong><?php echo escape((string) $article->getNbrVues()); ?></strong>
+                                    </div>
+                                    <div class="meta-item">
+                                        <span class="meta-label">Langue</span>
+                                        <strong><?php echo escape($article->getLang()); ?></strong>
+                                    </div>
+                                    <div class="meta-item">
+                                        <span class="meta-label">Categorie</span>
+                                        <strong><?php echo escape(nullableIntToString($article->getIdCategorie())); ?></strong>
+                                    </div>
+                                </div>
+
+                                <div class="actions-row">
+                                    <a class="ghost-link" href="editer.php?idArticle=<?php echo $article->getIdArticle(); ?>">Editer</a>
+                                    <a class="ghost-link" href="publier.php?idArticle=<?php echo $article->getIdArticle(); ?>">Publier</a>
+                                    <a class="ghost-link" href="supprimer.php?idArticle=<?php echo $article->getIdArticle(); ?>">Supprimer</a>
+                                </div>
+
+                                <p class="content-label">Contenu</p>
+                                <div class="article-content"><?php echo $article->getContenu(); ?></div>
+
+                                <p class="article-footnote">
+                                    Auteur principal: <?php echo escape(nullableIntToString($article->getIdUserPrincipal())); ?>
+                                    | Statut: <?php echo escape(nullableIntToString($article->getIdStatusArticle())); ?>
+                                </p>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </section>
+        </main>
     </div>
 </body>
 </html>
