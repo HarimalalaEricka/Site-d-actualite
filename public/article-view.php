@@ -22,11 +22,17 @@ if (preg_match('#^/([a-z]{2})/[^/]+/article/(\d{4})/(\d{2})/(\d{2})/(\d+)-.*\.ht
 	$article = $articleController->getPublishedArticleById($idArticle, $lang);
 
 	if ($article !== null) {
-		// Incrémente les vues dans la base de données
-		$viewCounterController = new ViewCounterController();
-		$viewCounterController->incrementViewCount($idArticle);
+		// Incrémentation de la vue : une seule fois par session d'entrée sur la page
+		session_start();
+		$sessionKey = 'article_viewed_' . $idArticle;
+		if (empty($_SESSION[$sessionKey])) {
+			$viewCounterController = new ViewCounterController();
+			$viewCounterController->incrementViewCount($idArticle);
+			$_SESSION[$sessionKey] = true;
+		}
 
 		// Récupère le nombre de vues depuis la base de données
+		$viewCounterController = $viewCounterController ?? new ViewCounterController();
 		$article['nbr_vues'] = $viewCounterController->getViewCount($idArticle);
 
 		// Construit le chemin canonique

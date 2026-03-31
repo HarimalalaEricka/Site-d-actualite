@@ -72,16 +72,20 @@ if ($year !== null && $month !== null) {
         <?php $nextPagePath = $basePath . '?' . $queryPrefix . 'page=' . ($page + 1); ?>
         <link rel="next" href="<?php echo e($nextPagePath); ?>">
     <?php endif; ?>
+    <link rel="stylesheet" href="/assets/css/Front/home.css">
     <title><?php echo e($title); ?> | Site d'actualite</title>
 </head>
 <body>
     <main>
-        <h1><?php echo e($title); ?></h1>
 
-        <nav>
-            <a href="/<?php echo e($lang); ?>">Accueil</a>
+        <nav aria-label="Navigation principale">
+             <a href="/<?= htmlspecialchars($lang) ?>">Accueil</a>
             <span> | </span>
-            <a href="/<?php echo e($lang); ?>/search">Recherche</a>
+            <a href="/<?= htmlspecialchars($lang) ?>/archives">Archives</a>
+            <span> | </span>
+            <a href="/admin.php">Acceder au BackOffice</a>
+            <span> | </span>
+            <a href="/<?php echo e($lang); ?>/search">Rechercher des articles</a>
             <span> | </span>
             <span aria-label="Language switch">&#127760;</span>
             <?php if ($lang === 'fr'): ?>
@@ -90,9 +94,11 @@ if ($year !== null && $month !== null) {
                 <a href="<?php echo e(switchLangUrl($lang, 'fr')); ?>">FR</a> <span>/</span> <strong>EN</strong>
             <?php endif; ?>
         </nav>
+        <h1><?php echo e($title); ?></h1>
+
 
         <?php if (is_array($categories) && $categories !== []): ?>
-            <section>
+            <section class="category-filter">
                 <h2>Filtrer par categorie</h2>
                 <ul>
                     <li>
@@ -162,7 +168,13 @@ if ($year !== null && $month !== null) {
     </main>
 
     <footer>
+        <a href="/<?= htmlspecialchars($lang) ?>">Accueil</a>
+        <span> | </span>
         <a href="/<?php echo e($lang); ?>/archives">Archives</a>
+        <span> | </span>
+        <a href="/<?php echo e($lang); ?>/search">Recherche</a>
+        <span> | </span>
+        <a href="/admin.php">BackOffice</a>
     </footer>
 </body>
 </html>

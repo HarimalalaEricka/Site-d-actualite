@@ -80,6 +80,7 @@ if ($queryParams !== []) {
     <meta name="description" content="<?= htmlspecialchars($metaDescription) ?>">
     <meta name="robots" content="<?= $hasFilters ? 'noindex,follow' : 'index,follow' ?>">
     <link rel="canonical" href="<?= htmlspecialchars($canonicalPath) ?>">
+    <link rel="stylesheet" href="/assets/css/Front/search.css">
     <?php if ($totalPages > 1 && $page > 1): ?>
         <?php $prevParams = $queryParams; unset($prevParams['page']); if ($page > 2) { $prevParams['page'] = (string) ($page - 1); } ?>
         <link rel="prev" href="/<?= htmlspecialchars($lang) ?>/search<?= $prevParams !== [] ? '?' . htmlspecialchars(http_build_query($prevParams)) : '' ?>">
@@ -91,19 +92,24 @@ if ($queryParams !== []) {
 </head>
 <body>
     <header>
-        <h1>Recherche d'actualités</h1>
         <nav>
             <a href="/<?= htmlspecialchars($lang) ?>">Accueil</a>
             <span> | </span>
             <a href="/<?= htmlspecialchars($lang) ?>/archives">Archives</a>
             <span> | </span>
+            <a href="/admin.php">Acceder au BackOffice</a>
+            <span> | </span>
+            
             <span aria-label="Language switch">&#127760;</span>
             <?php if ($lang === 'fr'): ?>
                 <strong>FR</strong> <span>/</span> <a href="<?= htmlspecialchars(switchLangUrl($lang, 'en')) ?>">EN</a>
             <?php else: ?>
                 <a href="<?= htmlspecialchars(switchLangUrl($lang, 'fr')) ?>">FR</a> <span>/</span> <strong>EN</strong>
             <?php endif; ?>
+            
         </nav>
+        <h1>Recherche d'actualités</h1>
+
     </header>
 
     <main>
@@ -246,6 +252,7 @@ if ($queryParams !== []) {
         </section>
 
         <footer>
+            
             <a href="/<?= htmlspecialchars($lang) ?>">Accueil</a> •
             <a href="/<?= htmlspecialchars($lang) ?>/archives">Archives</a>
         </footer>

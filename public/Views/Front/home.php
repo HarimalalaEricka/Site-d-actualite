@@ -46,15 +46,21 @@ function switchLangUrl(string $currentLang, string $targetLang): string
     <meta property="og:title" content="<?php echo e($pageTitle); ?> | Site d'actualite">
     <meta property="og:description" content="<?php echo e($metaDescription); ?>">
     <link rel="canonical" href="<?php echo e($canonicalPath); ?>">
+    <link rel="stylesheet" href="/assets/css/Front/home.css">
     <title><?php echo e($pageTitle); ?> | Site d'actualite</title>
 </head>
 <body>
     <main>
         <nav aria-label="Navigation principale">
+            <a href="/<?= htmlspecialchars($lang) ?>">Accueil</a>
+            <span> | </span>
+            <a href="/<?= htmlspecialchars($lang) ?>/archives">Archives</a>
+            <span> | </span>
             <a href="/admin.php">Acceder au BackOffice</a>
             <span> | </span>
             <a href="/<?php echo e($lang); ?>/search">Rechercher des articles</a>
             <span> | </span>
+            
             <span aria-label="Language switch">&#127760;</span>
             <?php if ($lang === 'fr'): ?>
                 <strong>FR</strong> <span>/</span> <a href="<?php echo e(switchLangUrl($lang, 'en')); ?>">EN</a>
@@ -66,9 +72,9 @@ function switchLangUrl(string $currentLang, string $targetLang): string
         <h1>Actualites</h1>
 
         <?php if ($featured !== null): ?>
-            <section>
+            <section class="news-grid popular-news">
                 <h2>A la une</h2>
-                <article>
+                <article class="featured-article">
                     <h3>
                         <a href="/<?php echo e($lang); ?>/<?php echo e((string) $featured['category_slug']); ?>/article/<?php echo e(date('Y/m/d', strtotime((string) $featured['date_publication']))); ?>/<?php echo e((string) $featured['Id_Article']); ?>-<?php echo e((string) $featured['slug']); ?>.html">
                             <?php echo e((string) $featured['titre']); ?>
@@ -78,7 +84,7 @@ function switchLangUrl(string $currentLang, string $targetLang): string
             </section>
         <?php endif; ?>
 
-        <section>
+        <section class="news-grid latest-news">
             <h2>Dernieres actualites</h2>
             <?php if ($latest === []): ?>
                 <p>Aucun article publie pour le moment.</p>
@@ -112,7 +118,7 @@ function switchLangUrl(string $currentLang, string $targetLang): string
         <?php endif; ?>
 
         <?php if ($categories !== []): ?>
-            <section>
+            <section class="categories-list">
                 <h2>Categories</h2>
                 <ul>
                     <?php foreach ($categories as $cat): ?>
@@ -129,7 +135,13 @@ function switchLangUrl(string $currentLang, string $targetLang): string
     </main>
 
     <footer>
+        <a href="/<?= htmlspecialchars($lang) ?>">Accueil</a>
+        <span> | </span>
         <a href="/<?php echo e($lang); ?>/archives">Archives</a>
+        <span> | </span>
+        <a href="/<?php echo e($lang); ?>/search">Recherche</a>
+        <span> | </span>
+        <a href="/admin.php">BackOffice</a>
     </footer>
 </body>
 </html>

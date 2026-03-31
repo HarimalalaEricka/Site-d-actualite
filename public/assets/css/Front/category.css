@@ -1,0 +1,166 @@
+/* Palette inspirée du Monde (Sobriété & Contraste) */
+:root {
+    --bg: #ffffff;
+    --bg-soft: #f9f9f9;
+    --text: #1a1a1a; /* Presque noir pour la lisibilité */
+    --muted: #666666;
+    --primary: #000000; /* Le Monde utilise beaucoup le noir pur */
+    --accent: #bc0000; /* Rouge discret pour les alertes/catégories */
+    --border: #e0e0e0;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --font-serif: "Georgia", Times, serif; /* Pour les titres d'articles */
+    --font-sans: "Segoe UI", Roboto, Arial, sans-serif; /* Pour l'interface */
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: var(--font-sans);
+    color: var(--text);
+    background-color: var(--bg);
+    line-height: 1.6;
+}
+
+/* --- HEADER & NAV --- */
+nav[aria-label="Navigation principale"] {
+    background: white;
+    padding: 15px 5%;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+nav a {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+nav a:hover { color: var(--accent); }
+
+/* --- CONTENEUR PRINCIPAL --- */
+main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* --- TITRE DE LA CATEGORIE --- */
+h1 {
+    font-size: 2.5rem;
+    color: var(--text);
+    margin-bottom: 10px;
+    position: relative;
+    display: inline-block;
+}
+
+h1::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: var(--primary);
+    margin-top: 10px;
+    border-radius: 2px;
+}
+
+.category-info {
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+}
+
+/* --- LISTE DES ARTICLES (Style Grille Home) --- */
+ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+li {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+li:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.15);
+}
+
+li a {
+    text-decoration: none;
+    color: var(--text);
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.4;
+    display: block;
+}
+
+li a:hover {
+    color: var(--primary);
+}
+
+/* --- PAGINATION --- */
+.pagination {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.pagination a {
+    text-decoration: none;
+    background: var(--panel);
+    color: var(--text);
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.pagination a:hover {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+.page-info {
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+footer {
+    margin-top: 60px;
+    padding: 40px;
+    background: var(--primary);
+    text-align: center;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    h1 { font-size: 1.8rem; }
+    ul { grid-template-columns: 1fr; }
+}

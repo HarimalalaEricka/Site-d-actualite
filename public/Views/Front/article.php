@@ -120,23 +120,45 @@ if (($article['primary_media_kind'] ?? 'image') === 'image' && isset($article['i
         <meta property="og:image" content="<?php echo e((string) $article['image_url']); ?>">
     <?php endif; ?>
     <link rel="canonical" href="<?php echo e($canonicalPath); ?>">
+    <link rel="stylesheet" href="/assets/css/Front/article.css">
     <title><?php echo e($articleTitle); ?> | Site d'actualite</title>
     <script type="application/ld+json"><?php echo json_encode($articleJsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?></script>
+<script>
+function unsetArticleView() {
+    if (window.navigator.sendBeacon) {
+        const data = new FormData();
+        data.append('article_id', <?php echo json_encode($article['Id_Article']); ?>);
+        navigator.sendBeacon('/unset_article_view.php', data);
+    } else {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/unset_article_view.php', false);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send('article_id=' + encodeURIComponent(<?php echo json_encode($article['Id_Article']); ?>));
+    }
+}
+
+window.addEventListener('unload', function() {
+    unsetArticleView();
+});
+</script>
 </head>
 <body>
     <main>
-        <nav>
-            <a href="/<?php echo e((string) $article['lang']); ?>">Accueil</a>
-            <span>/</span>
-            <a href="/<?php echo e((string) $article['lang']); ?>/<?php echo e((string) $article['category_slug']); ?>"><?php echo e((string) $article['categorie']); ?></a>
+        <nav aria-label="Navigation principale">
+            <a href="/<?= htmlspecialchars($lang) ?>">Accueil</a>
             <span> | </span>
-            <a href="/<?php echo e((string) $article['lang']); ?>/search">Recherche</a>
+            <a href="/<?= htmlspecialchars($lang) ?>/archives">Archives</a>
             <span> | </span>
+            <a href="/admin.php">Acceder au BackOffice</a>
+            <span> | </span>
+            <a href="/<?php echo e($lang); ?>/search">Rechercher des articles</a>
+            <span> | </span>
+            
             <span aria-label="Language switch">&#127760;</span>
-            <?php if (($article['lang'] ?? 'fr') === 'fr'): ?>
-                <strong>FR</strong> <span>/</span> <a href="<?php echo e(switchLangUrl((string) ($article['lang'] ?? 'fr'), 'en')); ?>">EN</a>
+            <?php if ($lang === 'fr'): ?>
+                <strong>FR</strong> <span>/</span> <a href="<?php echo e(switchLangUrl($lang, 'en')); ?>">EN</a>
             <?php else: ?>
-                <a href="<?php echo e(switchLangUrl((string) ($article['lang'] ?? 'en'), 'fr')); ?>">FR</a> <span>/</span> <strong>EN</strong>
+                <a href="<?php echo e(switchLangUrl($lang, 'fr')); ?>">FR</a> <span>/</span> <strong>EN</strong>
             <?php endif; ?>
         </nav>
 
@@ -252,7 +274,13 @@ if (($article['primary_media_kind'] ?? 'image') === 'image' && isset($article['i
     </main>
 
     <footer>
-        <a href="/<?php echo e((string) ($article['lang'] ?? 'fr')); ?>/archives">Archives</a>
+        <a href="/<?= htmlspecialchars($lang) ?>">Accueil</a>
+        <span> | </span>
+        <a href="/<?php echo e($lang); ?>/archives">Archives</a>
+        <span> | </span>
+        <a href="/<?php echo e($lang); ?>/search">Recherche</a>
+        <span> | </span>
+        <a href="/admin.php">BackOffice</a>
     </footer>
 </body>
 </html>

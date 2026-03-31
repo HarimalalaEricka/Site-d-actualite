@@ -1,0 +1,183 @@
+/* Palette inspirée du Monde (Sobriété & Contraste) */
+:root {
+    --bg: #ffffff;
+    --bg-soft: #f9f9f9;
+    --text: #1a1a1a; /* Presque noir pour la lisibilité */
+    --muted: #666666;
+    --primary: #000000; /* Le Monde utilise beaucoup le noir pur */
+    --accent: #bc0000; /* Rouge discret pour les alertes/catégories */
+    --border: #e0e0e0;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --font-serif: "Georgia", Times, serif; /* Pour les titres d'articles */
+    --font-sans: "Segoe UI", Roboto, Arial, sans-serif; /* Pour l'interface */
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: var(--font-sans);
+    color: var(--text);
+    background-color: var(--bg);
+    line-height: 1.6;
+}
+
+/* --- HEADER & NAV --- */
+nav[aria-label="Navigation principale"] {
+    background: white;
+    padding: 15px 5%;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+nav a {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+nav a:hover { color: var(--accent); }
+
+/* --- TITRE --- */
+h1 {
+    max-width: 1200px;
+    margin: 40px auto 20px;
+    padding: 0 28px;
+    font-size: 2.2rem;
+    color: var(--sidebar);
+}
+
+/* --- MISE EN PAGE DES ARCHIVES --- */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+section {
+    margin: 0 28px 40px;
+}
+
+section h2 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+}
+
+/* --- FILTRES (Catégories & Mois) --- */
+section ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Boutons de filtres */
+section:nth-of-type(1) li a, 
+section:nth-of-type(2) li a {
+    display: inline-block;
+    padding: 8px 16px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+section:nth-of-type(1) li a:hover, 
+section:nth-of-type(2) li a:hover {
+    background: var(--bg-accent);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* --- LISTE DES ARTICLES --- */
+section:last-of-type ul {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+section:last-of-type li {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+section:last-of-type li a {
+    text-decoration: none;
+    color: var(--text);
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+section:last-of-type li a:hover {
+    color: var(--primary);
+}
+
+section:last-of-type li small {
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+/* --- PAGINATION --- */
+main > nav:last-of-type {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 40px 0;
+}
+
+main > nav:last-of-type a {
+    background: var(--primary);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+main > nav:last-of-type span {
+    font-weight: 600;
+    color: var(--muted);
+}
+
+/* --- FOOTER --- */
+footer {
+    text-align: center;
+    padding: 40px;
+    background: var(--panel-soft);
+    border-top: 1px solid var(--border);
+}
+
+footer a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    h1 { font-size: 1.6rem; padding: 0 20px; }
+    section { margin: 0 20px 30px; }
+}

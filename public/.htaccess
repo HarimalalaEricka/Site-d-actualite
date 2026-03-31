@@ -5,6 +5,14 @@
 	Header set Connection keep-alive
 </IfModule>
 
+# === ROUTING: Redirige toutes les URLs dynamiques vers router.php ===
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^ router.php [L]
+</IfModule>
+
 ## Disable ETag to avoid cache validator mismatches across servers
 <IfModule mod_headers.c>
 	Header unset ETag

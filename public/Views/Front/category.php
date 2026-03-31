@@ -36,6 +36,7 @@ $metaDescription = 'Articles de la categorie ' . (string) $category['categorie']
     <meta name="description" content="<?php echo e($metaDescription); ?>">
     <meta name="robots" content="index,follow">
     <link rel="canonical" href="<?php echo e($canonicalPath); ?>">
+    <link rel="stylesheet" href="/assets/css/Front/category.css">
     <?php if ($currentPage > 1): ?>
         <link rel="prev" href="<?php echo e($currentPage === 2 ? $basePath : ($basePath . '?page=' . ($currentPage - 1))); ?>">
     <?php endif; ?>
@@ -46,10 +47,14 @@ $metaDescription = 'Articles de la categorie ' . (string) $category['categorie']
 </head>
 <body>
     <main>
-        <nav>
-            <a href="/<?php echo e($lang); ?>">Accueil</a>
+        <nav aria-label="Navigation principale">
+            <a href="/<?= htmlspecialchars($lang) ?>">Accueil</a>
             <span> | </span>
-            <a href="/<?php echo e($lang); ?>/search">Recherche</a>
+            <a href="/<?= htmlspecialchars($lang) ?>/archives">Archives</a>
+            <span> | </span>
+            <a href="/admin.php">Acceder au BackOffice</a>
+            <span> | </span>
+            <a href="/<?php echo e($lang); ?>/search">Rechercher des articles</a>
             <span> | </span>
             <span aria-label="Language switch">&#127760;</span>
             <?php if ($lang === 'fr'): ?>
@@ -96,7 +101,13 @@ $metaDescription = 'Articles de la categorie ' . (string) $category['categorie']
     </main>
 
     <footer>
+        <a href="/<?= htmlspecialchars($lang) ?>">Accueil</a>
+        <span> | </span>
         <a href="/<?php echo e($lang); ?>/archives">Archives</a>
+        <span> | </span>
+        <a href="/<?php echo e($lang); ?>/search">Recherche</a>
+        <span> | </span>
+        <a href="/admin.php">BackOffice</a>
     </footer>
 </body>
 </html>
