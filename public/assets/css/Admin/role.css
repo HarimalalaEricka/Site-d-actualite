@@ -1,168 +1,226 @@
+:root {
+    --bg: #ffffff;
+    --text: #1a1a1a;
+    --text-muted: #666666;
+    --accent: #bc0000;
+    --border: #e0e0e0;
+    --font-serif: "Georgia", serif;
+    --font-sans: "Segoe UI", Roboto, sans-serif;
+}
+
 body {
     display: block;
+    background: var(--bg);
+    font-family: var(--font-sans);
 }
 
 .role-main {
+    max-width: 900px;
+    margin: 0 auto;
     display: grid;
-    gap: 16px;
+    gap: 30px;
+    padding: 40px 20px;
 }
 
+/* Notices de sécurité type "Bulletin" */
 .notice {
-    border-radius: 12px;
-    padding: 12px 14px;
-    border: 1px solid transparent;
+    border-radius: 2px;
+    padding: 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-left: 4px solid;
 }
 
 .notice.error {
-    background: #fff1f1;
-    border-color: #fecaca;
-    color: #991b1b;
+    background: #fff5f5;
+    border-color: var(--accent);
+    color: var(--accent);
 }
 
 .notice.success {
-    background: #ecfdf5;
-    border-color: #a7f3d0;
+    background: #f2faf7;
+    border-color: #065f46;
     color: #065f46;
 }
 
+/* Liste des Rôles (Style Index) */
 .role-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 12px;
+    gap: 0;
 }
 
 .role-item {
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 14px;
-    background: #ffffff;
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    transition: background 0.2s ease;
+}
+
+.role-item:hover {
+    background: #fcfcfc;
 }
 
 .role-head {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
+    gap: 15px;
 }
 
 .role-head h3 {
     margin: 0;
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text);
 }
 
 .role-id {
-    font-weight: 700;
-    color: var(--muted);
-    font-size: 0.86rem;
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
-    border-radius: 999px;
-    padding: 4px 10px;
+    font-weight: 800;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: #f1f1f1;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    padding: 2px 8px;
 }
 
+/* Formulaire de création de rôle */
 .role-form-card {
-    padding: 22px;
+    padding: 0;
+    margin-top: 20px;
 }
 
 .role-form {
     display: grid;
-    gap: 14px;
+    gap: 20px;
 }
 
 .role-form label {
     display: block;
     margin-bottom: 6px;
-    font-weight: 700;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    color: var(--text);
 }
 
 .role-form input {
     width: 100%;
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-size: 0.96rem;
-    background: #fff;
+    border-radius: 2px;
+    padding: 12px;
+    font-size: 1rem;
+    background: #f9f9f9;
 }
 
 .role-form input:focus {
-    outline: 2px solid #99f6e4;
-    border-color: var(--primary);
+    outline: none;
+    border-color: var(--text);
+    background: #fff;
 }
 
+/* Actions & Boutons Pill */
 .actions-row {
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 6px;
+    gap: 12px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.ghost-link, .danger-link {
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 999px; /* Boutons Pill */
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
 }
 
 .ghost-link {
-    text-decoration: none;
-    display: inline-block;
-    padding: 9px 13px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--panel-soft);
-    color: var(--text);
-    font-weight: 600;
+    background: var(--text);
+    color: white;
+    border: none;
 }
 
 .ghost-link:hover {
-    background: #edf2f7;
+    background: var(--accent);
 }
 
 .danger-link {
-    border-color: #fecaca;
-    color: #991b1b;
-    background: #fff1f2;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
 }
 
 .danger-link:hover {
-    background: #ffe4e6;
+    background: #fff5f5;
+    color: var(--accent);
+    border-color: var(--accent);
 }
 
+/* Suppression Critique */
 .delete-card {
-    border-color: #fecaca;
-    background: linear-gradient(160deg, #fff7f7 0%, #fff1f2 100%);
+    border: 1px solid var(--accent);
+    background: #fff5f5;
+    padding: 30px;
+    border-radius: 4px;
 }
 
 .delete-warning {
     margin: 0;
-    color: #7f1d1d;
-    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+    font-weight: 900;
 }
 
 .delete-target {
-    margin: 10px 0 0;
-    font-size: 1.2rem;
-    font-weight: 800;
+    margin: 10px 0 20px;
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--text);
 }
 
 .danger-btn {
     border: 0;
-    border-radius: 10px;
-    padding: 10px 14px;
-    font-weight: 700;
+    border-radius: 999px;
+    padding: 12px 24px;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.8rem;
     cursor: pointer;
     color: #fff;
-    background: linear-gradient(135deg, #b91c1c 0%, #ef4444 100%);
+    background: var(--accent);
 }
 
 .danger-btn:hover {
-    filter: brightness(0.96);
+    background: #900000;
 }
 
 .empty-state {
-    margin: 0;
-    color: var(--muted);
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 20px 0;
 }
 
 @media (max-width: 700px) {
     .role-head {
-        flex-direction: column;
+        flex-direction: column-reverse;
         align-items: flex-start;
+        gap: 8px;
     }
 }

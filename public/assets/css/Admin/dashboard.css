@@ -1,18 +1,27 @@
+/* Card style for admin consistency */
+.card {
+    width: 100%;
+    max-width: 700px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 40px;
+    margin: 0 auto 30px auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
 :root {
     color-scheme: light;
-    --bg: #eef3f9;
-    --bg-accent: #dbeafe;
+    /* Palette de couleurs Journal */
+    --bg: #ffffff;
+    --text: #1a1a1a;
+    --text-muted: #555555;
+    --accent: #bc0000; /* Rouge Editorial */
+    --border: #e0e0e0;
     --panel: #ffffff;
-    --panel-soft: #f8fafc;
-    --text: #0f172a;
-    --muted: #64748b;
-    --primary: #0f766e;
-    --primary-hover: #0f5f59;
-    --border: #dbe3ee;
-    --sidebar: #0b253a;
-    --sidebar-muted: #8fb2ca;
-    --sidebar-active: #134165;
-    --shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
+    
+    /* Typographies */
+    --font-serif: "Georgia", "Times New Roman", serif;
+    --font-sans: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 * {
@@ -21,163 +30,185 @@
 
 body {
     margin: 0;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--font-sans);
     color: var(--text);
-    background:
-        radial-gradient(circle at 12% 10%, var(--bg-accent) 0%, transparent 30%),
-        linear-gradient(160deg, #f8fafc 0%, var(--bg) 70%);
-    min-height: 100vh;
+    background-color: var(--bg);
+    line-height: 1.6;
 }
 
+/* Layout - Structure type Média */
 .dashboard-layout {
     min-height: 100vh;
     display: grid;
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: 240px 1fr;
+    border-top: 4px solid var(--text); /* Ligne de tête typique */
 }
 
+/* Sidebar - Sobriété maximale */
 .sidebar {
-    background: linear-gradient(180deg, #0b253a 0%, #123d59 100%);
-    color: #e6f0f6;
-    padding: 26px 18px;
+    background: var(--bg);
+    padding: 40px 24px;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    border-right: 1px solid var(--border);
 }
 
 .sidebar-brand h1 {
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    font-weight: 900;
     margin: 0;
-    font-size: 1.35rem;
+    letter-spacing: -1px;
+    text-transform: capitalize;
 }
 
 .sidebar-brand p {
-    margin: 6px 0 0;
-    color: var(--sidebar-muted);
-    font-size: 0.92rem;
+    margin: 4px 0 0;
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .sidebar-nav {
-    margin-top: 28px;
+    margin-top: 40px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
 }
 
 .nav-link {
     text-decoration: none;
-    color: #eaf3f9;
-    padding: 10px 12px;
-    border-radius: 10px;
-    transition: background-color 0.2s ease;
-    font-weight: 600;
+    color: var(--text);
+    padding: 8px 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-bottom: 1px solid transparent;
+    transition: all 0.2s ease;
 }
 
 .nav-link:hover {
-    background: rgba(255, 255, 255, 0.13);
+    color: var(--accent);
+    padding-left: 5px;
 }
 
 .nav-link.active {
-    background: var(--sidebar-active);
+    font-weight: 700;
+    border-bottom: 2px solid var(--accent);
+    color: var(--accent);
 }
 
-.sidebar-footer {
-    margin-top: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.footer-link {
-    text-decoration: none;
-    color: #dcecf7;
-    font-weight: 600;
-    padding: 10px 12px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.footer-link:hover {
-    background: rgba(255, 255, 255, 0.17);
-}
-
-.footer-link.logout {
-    background: rgba(12, 121, 109, 0.7);
-}
-
+/* Main Content */
 .dashboard-main {
-    padding: 28px;
+    padding: 40px 60px;
+    max-width: 1200px;
+}
+
+.main-header {
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--text);
+    padding-bottom: 20px;
+    text-align: center; /* Style Une de Journal */
+}
+
+.subtitle {
+    font-family: var(--font-sans);
+    color: var(--accent);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+}
+
+.main-header h2 {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    margin: 10px 0;
+    font-weight: 900;
+}
+
+/* Cartes Articles */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
 }
 
 .card {
     background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    box-shadow: var(--shadow);
-    padding: 24px;
+    border: none;
+    padding: 0;
+    transition: opacity 0.3s ease;
 }
 
-.main-header {
-    margin-bottom: 20px;
+.card:hover {
+    opacity: 0.8;
 }
 
-.subtitle {
-    margin: 0;
-    color: var(--muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-size: 0.78rem;
+.card h3 {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    margin: 12px 0;
+    line-height: 1.2;
 }
 
-.main-header h2 {
-    margin: 10px 0 8px;
+.card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 15px;
 }
 
-.welcome {
-    margin: 0;
-    color: var(--muted);
-}
-
-.cards-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
-}
-
-.cards-grid h3 {
-    margin: 0 0 10px;
-}
-
-.cards-grid p {
-    margin: 0 0 14px;
-    color: var(--muted);
-    line-height: 1.5;
-}
-
+/* Boutons en "Pill" */
 .action-link {
     text-decoration: none;
     display: inline-block;
-    background: var(--primary);
+    background: var(--text);
     color: #fff;
-    border-radius: 10px;
-    padding: 9px 13px;
+    border-radius: 999px;
+    padding: 6px 18px;
+    font-size: 0.8rem;
     font-weight: 600;
+    transition: background 0.2s;
 }
 
 .action-link:hover {
-    background: var(--primary-hover);
+    background: var(--accent);
 }
 
-@media (max-width: 980px) {
+/* Footer de Sidebar */
+.sidebar-footer {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+.footer-link {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.footer-link.logout {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
     .dashboard-layout {
         grid-template-columns: 1fr;
     }
-
     .sidebar {
         border-right: 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        border-bottom: 1px solid var(--border);
     }
-
     .cards-grid {
         grid-template-columns: 1fr;
+    }
+    .main-header h2 {
+        font-size: 2rem;
     }
 }
